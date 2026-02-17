@@ -4,6 +4,10 @@ A Progressive Web App (PWA) for tracking my 90-day certification challenge and d
 
 **Live URL:** https://juniors-dashboard.pages.dev
 
+**Demo (with sample data):** https://juniors-dashboard.pages.dev/demo.html
+
+> ⚠️ **Privacy Note:** The demo uses fake data. Your personal dashboard is private and requires authentication.
+
 ## What It Does
 
 - **90-Day Challenge Tracker** - Network+ → Security+ → Real Estate App
@@ -126,6 +130,25 @@ Cron job configured to:
    - Forced "essentials only" on main screen
    - Moved everything else to dedicated pages
    - Result: cleaner, faster, more focused
+
+## Push Notifications
+
+**Status:** Supported but not yet enabled
+
+**Requirements:**
+- ✅ Android (Chrome) - Full support
+- ⚠️ iOS (Safari 16.4+) - Only works when added to home screen
+- ❌ Requires backend server to send notifications (can't schedule locally)
+
+**How it would work:**
+1. User enables notifications in Settings
+2. Service worker registers with browser's push service
+3. Backend sends push notifications via Cloudflare/FCM
+4. Notifications appear even when app is closed
+
+**Current limitation:** Notifications need the backend running. Since the backend is local (on your laptop), notifications only work when your computer is on and connected.
+
+**Solution:** Move backend to cloud (Railway/Render) for 24/7 notifications.
 
 ## Roadmap
 
