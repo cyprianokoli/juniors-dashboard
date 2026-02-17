@@ -1,0 +1,2724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Dashboard">
+    <meta name="theme-color" content="#0f0f0f">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="apple-touch-icon-120x120.png">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <title>Junior's Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f0f0f;
+            color: #fff;
+            min-height: 100vh;
+            padding: 16px;
+            padding-bottom: 100px;
+        }
+        
+        .header {
+            margin-bottom: 24px;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .header .date {
+            color: #888;
+            font-size: 14px;
+        }
+        
+        .card {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid #2a2a2a;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        
+        .card-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #aaa;
+        }
+        
+        .icon {
+            font-size: 20px;
+        }
+        
+        .progress-bar {
+            background: #2a2a2a;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-fill.green { background: #22c55e; }
+        .progress-fill.blue { background: #3b82f6; }
+        .progress-fill.orange { background: #f97316; }
+        .progress-fill.purple { background: #a855f7; }
+        .progress-fill.red { background: #ef4444; }
+        .progress-fill.yellow { background: #eab308; }
+        
+        .progress-text {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 12px;
+        }
+        
+        .task-list {
+            list-style: none;
+        }
+        
+        .task-item {
+            border-bottom: 1px solid #2a2a2a;
+            overflow: hidden;
+        }
+        
+        .task-item:last-child {
+            border-bottom: none;
+        }
+        
+        .task-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #444;
+            border-radius: 6px;
+            flex-shrink: 0;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        
+        .checkbox.done {
+            background: #22c55e;
+            border-color: #22c55e;
+        }
+        
+        .checkbox.done::after {
+            content: '✓';
+            color: #0f0f0f;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        .task-text {
+            flex: 1;
+        }
+        
+        .task-text.done {
+            text-decoration: line-through;
+            color: #666;
+        }
+        
+        .task-title {
+            font-size: 15px;
+            font-weight: 500;
+        }
+        
+        .task-meta {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .expand-hint {
+            font-size: 11px;
+            color: #555;
+            margin-top: 2px;
+        }
+        
+        .task-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            background: #111;
+            border-radius: 8px;
+            margin-left: 34px;
+        }
+        
+        .task-details.open {
+            max-height: 800px;
+            margin-bottom: 12px;
+        }
+        
+        .task-details-content {
+            padding: 16px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .task-details-content h4 {
+            color: #aaa;
+            font-size: 13px;
+            margin: 16px 0 8px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .task-details-content h4:first-child {
+            margin-top: 0;
+        }
+        
+        .task-details-content ul {
+            margin-left: 20px;
+            color: #ccc;
+        }
+        
+        .task-details-content li {
+            margin: 4px 0;
+        }
+        
+        .editable-area {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 12px;
+            color: #fff;
+            font-size: 14px;
+            line-height: 1.5;
+            width: 100%;
+            min-height: 100px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        .editable-area:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+        
+        .stat-label {
+            color: #aaa;
+        }
+        
+        .stat-value {
+            font-weight: 600;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .badge.active {
+            background: #22c55e33;
+            color: #22c55e;
+        }
+        
+        .badge.pending {
+            background: #f9731633;
+            color: #f97316;
+        }
+        
+        .badge.upcoming {
+            background: #3b82f633;
+            color: #3b82f6;
+        }
+        
+        .badge.due {
+            background: #ef444433;
+            color: #ef4444;
+        }
+        
+        .badge.review {
+            background: #a855f733;
+            color: #a855f7;
+        }
+        
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        
+        .action-btn {
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 12px;
+            padding: 16px;
+            color: #fff;
+            text-align: center;
+            text-decoration: none;
+            font-size: 13px;
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+        
+        .action-btn:active {
+            background: #3a3a3a;
+        }
+        
+        .action-btn .emoji {
+            display: block;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .journal-section {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid #2a2a2a;
+        }
+        
+        .journal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .journal-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #aaa;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .save-indicator {
+            font-size: 12px;
+            color: #22c55e;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .save-indicator.show {
+            opacity: 1;
+        }
+        
+        .journal-entries {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .journal-entry {
+            background: #111;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+        
+        .journal-entry:last-child {
+            margin-bottom: 0;
+        }
+        
+        .journal-date {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .journal-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #fff;
+            white-space: pre-wrap;
+        }
+        
+        .add-journal-btn {
+            background: #2a2a2a;
+            border: 2px dashed #444;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 12px;
+        }
+        
+        .add-journal-btn:active {
+            background: #333;
+            border-color: #555;
+        }
+        
+        .journal-input-area {
+            display: none;
+            margin-top: 12px;
+        }
+        
+        .journal-input-area.show {
+            display: block;
+        }
+        
+        .journal-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #3b82f6;
+            color: #fff;
+        }
+        
+        .btn-primary:active {
+            background: #2563eb;
+        }
+        
+        .btn-secondary {
+            background: #2a2a2a;
+            color: #888;
+        }
+        
+        .btn-secondary:active {
+            background: #333;
+        }
+
+        /* Streak Counter Styles */
+        .streak-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-top: 12px;
+        }
+        
+        .streak-day {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            background: #2a2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #666;
+            transition: all 0.2s;
+        }
+        
+        .streak-day.active {
+            background: #22c55e;
+            color: #0f0f0f;
+        }
+        
+        .streak-day.partial {
+            background: #3b82f6;
+            color: #fff;
+        }
+        
+        .streak-day.missed {
+            background: #ef4444;
+            color: #fff;
+        }
+        
+        .streak-legend {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .streak-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .streak-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+        
+        .streak-stats {
+            display: flex;
+            gap: 24px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #2a2a2a;
+        }
+        
+        .streak-stat {
+            text-align: center;
+        }
+        
+        .streak-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #22c55e;
+        }
+        
+        .streak-stat-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        /* Spaced Repetition Styles */
+        .sr-item {
+            background: #111;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .sr-item.due {
+            border-left-color: #ef4444;
+            background: #1a1111;
+        }
+        
+        .sr-item.review-soon {
+            border-left-color: #f97316;
+        }
+        
+        .sr-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .sr-topic {
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .sr-interval {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .sr-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .sr-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .sr-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: none;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .sr-btn-hard {
+            background: #ef444433;
+            color: #ef4444;
+        }
+        
+        .sr-btn-good {
+            background: #3b82f633;
+            color: #3b82f6;
+        }
+        
+        .sr-btn-easy {
+            background: #22c55e33;
+            color: #22c55e;
+        }
+        
+        .add-sr-btn {
+            background: #2a2a2a;
+            border: 2px dashed #444;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            color: #888;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 12px;
+        }
+        
+        .sr-input-area {
+            display: none;
+            margin-top: 12px;
+            background: #111;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        
+        .sr-input-area.show {
+            display: block;
+        }
+        
+        .sr-input {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 12px;
+            color: #fff;
+            font-size: 14px;
+            width: 100%;
+            margin-bottom: 12px;
+            font-family: inherit;
+        }
+        
+        .sr-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        /* AI Webhook Styles */
+        .ai-input-container {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        
+        .ai-input {
+            flex: 1;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        
+        .ai-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        .ai-send-btn {
+            background: #3b82f6;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .ai-send-btn:active {
+            background: #2563eb;
+        }
+        
+        .ai-send-btn:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+        }
+        
+        .ai-response {
+            background: #111;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 12px;
+            font-size: 14px;
+            line-height: 1.6;
+            display: none;
+        }
+        
+        .ai-response.show {
+            display: block;
+        }
+        
+        .ai-task-preview {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+        }
+
+        /* Weekly Review Styles */
+        .weekly-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .weekly-stat {
+            background: #111;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .weekly-stat-value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .weekly-stat-value.green { color: #22c55e; }
+        .weekly-stat-value.blue { color: #3b82f6; }
+        .weekly-stat-value.orange { color: #f97316; }
+        
+        .weekly-stat-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+        
+        .weekly-breakdown {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #2a2a2a;
+        }
+        
+        .weekly-breakdown-title {
+            font-size: 13px;
+            color: #aaa;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Notification Permission UI */
+        .notif-permission {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 1px solid #3b82f6;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        
+        .notif-permission.granted {
+            border-color: #22c55e;
+            background: #1a2e1a;
+        }
+        
+        .notif-permission.denied {
+            border-color: #ef4444;
+            background: #2e1a1a;
+        }
+        
+        .notif-text {
+            flex: 1;
+        }
+        
+        .notif-text h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .notif-text p {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .notif-btn {
+            background: #3b82f6;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        
+        .notif-btn:disabled {
+            background: #333;
+            cursor: default;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            bottom: 80px;
+            left: 16px;
+            right: 16px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+        
+        .toast {
+            background: #1a1a1a;
+            border: 1px solid #3a3a3a;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            pointer-events: auto;
+        }
+        
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .toast-icon {
+            font-size: 20px;
+        }
+        
+        .toast-content {
+            flex: 1;
+        }
+        
+        .toast-title {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .toast-message {
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        /* Floating AI Button */
+        .fab-ai {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            border: none;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+            transition: all 0.3s ease;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fab-ai:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 30px rgba(59, 130, 246, 0.5);
+        }
+
+        .fab-ai:active {
+            transform: scale(0.95);
+        }
+
+        .fab-icon {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        /* AI Modal */
+        .ai-modal {
+            position: fixed;
+            bottom: 88px;
+            right: 24px;
+            width: calc(100% - 48px);
+            max-width: 360px;
+            background: #1a1a1a;
+            border: 1px solid #2a2a2a;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            z-index: 99;
+            display: none;
+            flex-direction: column;
+            max-height: 500px;
+            overflow: hidden;
+        }
+
+        .ai-modal.show {
+            display: flex;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ai-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid #2a2a2a;
+            background: #0f0f0f;
+        }
+
+        .ai-modal-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .ai-modal-icon {
+            font-size: 20px;
+        }
+
+        .ai-modal-close {
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .ai-modal-close:hover {
+            background: #2a2a2a;
+            color: #fff;
+        }
+
+        .ai-modal-body {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .ai-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 320px;
+        }
+
+        .ai-message {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .ai-message.user {
+            align-self: flex-end;
+            background: #3b82f6;
+            color: #fff;
+            border-bottom-right-radius: 4px;
+        }
+
+        .ai-message.assistant {
+            align-self: flex-start;
+            background: #2a2a2a;
+            color: #fff;
+            border-bottom-left-radius: 4px;
+        }
+
+        .ai-input-wrapper {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px 16px;
+            border-top: 1px solid #2a2a2a;
+            background: #0f0f0f;
+        }
+
+        .ai-chat-input {
+            flex: 1;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 24px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .ai-chat-input:focus {
+            border-color: #3b82f6;
+        }
+
+        .ai-chat-send {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #3b82f6;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .ai-chat-send:hover {
+            background: #2563eb;
+        }
+
+        .ai-chat-send:active {
+            transform: scale(0.95);
+        }
+
+        /* Bottom Navigation */
+        .nav-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #0f0f0f;
+            border-top: 1px solid #2a2a2a;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+            z-index: 90;
+            padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #666;
+            font-size: 11px;
+            transition: color 0.2s;
+        }
+
+        .nav-item.active {
+            color: #3b82f6;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+        }
+
+        /* Toggle Switch */
+        .toggle-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #2a2a2a;
+        }
+        
+        .toggle-row:last-child {
+            border-bottom: none;
+        }
+        
+        .toggle-label {
+            font-size: 14px;
+        }
+        
+        .toggle-switch {
+            width: 50px;
+            height: 28px;
+            background: #2a2a2a;
+            border-radius: 14px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .toggle-switch.active {
+            background: #22c55e;
+        }
+        
+        .toggle-knob {
+            width: 24px;
+            height: 24px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.2s;
+        }
+        
+        .toggle-switch.active .toggle-knob {
+            transform: translateX(22px);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>👋 Hey Junior</h1>
+        <div class="date" id="current-date">Loading...</div>
+    </div>
+
+    <!-- Notification Permission -->
+    <div class="notif-permission" id="notif-permission">
+        <div class="notif-text">
+            <h3>🔔 Enable Notifications</h3>
+            <p>Get study reminders and task nudges</p>
+        </div>
+        <button class="notif-btn" id="notif-btn" onclick="requestNotificationPermission()">Enable</button>
+    </div>
+
+    <!-- Spaced Repetition System -->
+    <div class="card">
+        <div class="card-header">
+            <span class="icon">🧠</span>
+            <h2>Spaced Repetition</h2>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill purple" id="sr-progress" style="width: 0%"></div>
+        </div>
+        <div class="progress-text" id="sr-progress-text">0 due for review</div>
+        
+        <div id="sr-items">
+            <!-- SR items loaded dynamically -->
+        </div>
+        
+        <div class="add-sr-btn" id="add-sr-btn" onclick="showSRInput()">
+            + Add Study Topic
+        </div>
+        
+        <div class="sr-input-area" id="sr-input-area">
+            <input type="text" class="sr-input" id="sr-topic-input" placeholder="Topic name (e.g., TCP/IP Model)">
+            <textarea class="sr-input" id="sr-notes-input" placeholder="Study notes or key facts..." rows="3"></textarea>
+            <div class="journal-actions">
+                <button class="btn btn-secondary" onclick="hideSRInput()">Cancel</button>
+                <button class="btn btn-primary" onclick="addStudyTopic()">Add Topic</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Streak Counter -->
+    <div class="card">
+        <div class="card-header">
+            <span class="icon">🔥</span>
+            <h2>Streaks</h2>
+        </div>
+        
+        <div class="streak-stats">
+            <div class="streak-stat">
+                <div class="streak-stat-value" id="streak-network">0</div>
+                <div class="streak-stat-label">Network+</div>
+            </div>
+            <div class="streak-stat">
+                <div class="streak-stat-value" id="streak-french">0</div>
+                <div class="streak-stat-label">French</div>
+            </div>
+            <div class="streak-stat">
+                <div class="streak-stat-value" id="streak-gym">0</div>
+                <div class="streak-stat-label">Gym</div>
+            </div>
+        </div>
+        
+        <div class="streak-legend">
+            <div class="streak-legend-item">
+                <div class="streak-dot" style="background: #22c55e;"></div>
+                <span>Done</span>
+            </div>
+            <div class="streak-legend-item">
+                <div class="streak-dot" style="background: #3b82f6;"></div>
+                <span>Partial</span>
+            </div>
+            <div class="streak-legend-item">
+                <div class="streak-dot" style="background: #ef4444;"></div>
+                <span>Missed</span>
+            </div>
+            <div class="streak-legend-item">
+                <div class="streak-dot" style="background: #2a2a2a;"></div>
+                <span>Future</span>
+            </div>
+        </div>
+        
+        <div style="margin-top: 16px;">
+            <div style="font-size: 13px; color: #aaa; margin-bottom: 8px;">Last 7 Days</div>
+            <div class="streak-grid" id="streak-grid">
+                <!-- Streak days loaded dynamically -->
+            </div>
+        </div>
+
+        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #2a2a2a;">
+            <div style="font-size: 13px; color: #aaa; margin-bottom: 12px;">Quick Log</div>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-secondary" onclick="logStreak('network')" style="flex: 1; font-size: 12px;">📚 Network+</button>
+                <button class="btn btn-secondary" onclick="logStreak('french')" style="flex: 1; font-size: 12px;">🇫🇷 French</button>
+                <button class="btn btn-secondary" onclick="logStreak('gym')" style="flex: 1; font-size: 12px;">💪 Gym</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 90-Day Challenge -->
+    <div class="card">
+        <div class="card-header">
+            <span class="icon">💪</span>
+            <h2>90-Day Hard Challenge</h2>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill green" style="width: 20%"></div>
+        </div>
+        <div class="progress-text">Day 6 of 30 (Network+) — 20% complete</div>
+        
+        <ul class="task-list">
+            <li class="task-item" data-task="network-plus">
+                <div class="task-row" onclick="toggleTask('network-plus')">
+                    <div class="checkbox" id="cb-network-plus"></div>
+                    <div class="task-text" id="txt-network-plus">
+                        <div class="task-title">Days 1-30: Network+ Cert</div>
+                        <div class="task-meta">In Progress • Day 6: Ports & Protocols</div>
+                        <div class="expand-hint">👆 Tap for study details</div>
+                    </div>
+                </div>
+                <div class="task-details" id="details-network-plus">
+                    <div class="task-details-content">
+                        <h4>🎯 Today's Focus: Ports & Protocols</h4>
+                        <ul>
+                            <li>TCP vs UDP — connection-oriented vs connectionless</li>
+                            <li>Three-way handshake (SYN, SYN-ACK, ACK)</li>
+                            <li>Well-known ports: 20/21 (FTP), 22 (SSH), 25 (SMTP), 53 (DNS), 80 (HTTP), 443 (HTTPS), 3389 (RDP)</li>
+                            <li>Ephemeral ports (49152-65535)</li>
+                        </ul>
+                        
+                        <h4>📚 Resources</h4>
+                        <ul>
+                            <li>Professor Messer Network+ — Ports & Protocols section</li>
+                            <li>Flashcard deck: Common ports</li>
+                        </ul>
+                        
+                        <h4>✍️ Notes</h4>
+                        <textarea class="editable-area" id="notes-network-plus" placeholder="Add your notes here..." oninput="saveNotes('network-plus')">TCP = reliable, ordered, slower. UDP = fast, unreliable, no handshake. Remember: HTTP 80, HTTPS 443, SSH 22 (secure shell), FTP 21, DNS 53.</textarea>
+                    </div>
+                </div>
+            </li>
+            
+            <li class="task-item" data-task="security-plus">
+                <div class="task-row" onclick="toggleTask('security-plus')">
+                    <div class="checkbox" id="cb-security-plus"></div>
+                    <div class="task-text" id="txt-security-plus">
+                        <div class="task-title">Days 31-60: Security+ Cert</div>
+                        <div class="task-meta">Upcoming • Mar 18 start</div>
+                        <div class="expand-hint">👆 Tap to preview plan</div>
+                    </div>
+                </div>
+                <div class="task-details" id="details-security-plus">
+                    <div class="task-details-content">
+                        <h4>🎯 Security+ Preview (SY0-701)</h4>
+                        <ul>
+                            <li>General Security Concepts</li>
+                            <li>Threats, Vulnerabilities, Mitigations</li>
+                            <li>Security Architecture</li>
+                            <li>Security Operations</li>
+                            <li>Security Program Management</li>
+                        </ul>
+                        
+                        <h4>📚 Planned Resources</h4>
+                        <ul>
+                            <li>Professor Messer Security+ playlist</li>
+                            <li>Jason Dion practice exams</li>
+                            <li>CompTIA CertMaster</li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+            
+            <li class="task-item" data-task="real-estate">
+                <div class="task-row" onclick="toggleTask('real-estate')">
+                    <div class="checkbox" id="cb-real-estate"></div>
+                    <div class="task-text" id="txt-real-estate">
+                        <div class="task-title">Days 61-90: Real Estate App MVP</div>
+                        <div class="task-meta">Phase 0 • Planning</div>
+                        <div class="expand-hint">👆 Tap for project details</div>
+                    </div>
+                </div>
+                <div class="task-details" id="details-real-estate">
+                    <div class="task-details-content">
+                        <h4>🏗️ Tech Stack</h4>
+                        <ul>
+                            <li>Backend: Node.js + Express + PostgreSQL</li>
+                            <li>Frontend: Flutter (iOS + Android)</li>
+                            <li>Real-time: Socket.io or Firebase</li>
+                            <li>Hosting: Railway</li>
+                            <li>Design: Figma</li>
+                        </ul>
+                        
+                        <h4>📋 MVP Scope</h4>
+                        <ul>
+                            <li>Auth (buyer, seller, admin roles)</li>
+                            <li>Listings CRUD with photos</li>
+                            <li>Messaging between parties</li>
+                            <li>Admin verification panel</li>
+                            <li>5 screens total</li>
+                        </ul>
+                        
+                        <h4>🗓️ Timeline</h4>
+                        <ul>
+                            <li>Starts around Day 61 (parallel with Sec+)</li>
+                            <li>4-week sprint to MVP</li>
+                            <li>8 endpoints, 5 screens</li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Today's Schedule -->
+    <div class="card">
+        <div class="card-header">
+            <span class="icon">📅</span>
+            <h2>Today's Schedule</h2>
+        </div>
+        
+        <ul class="task-list">
+            <li class="task-item" data-task="morning">
+                <div class="task-row" onclick="toggleTask('morning')">
+                    <div class="checkbox" id="cb-morning"></div>
+                    <div class="task-text" id="txt-morning">
+                        <div class="task-title">6:00 AM — Wake Up & Morning Routine</div>
+                        <div class="task-meta">Clean room, make bed, breakfast, gym</div>
+                        <div class="expand-hint">👆 Tap for gym workout</div>
+                    </div>
+                </div>
+                <div class="task-details" id="details-morning">
+                    <div class="task-details-content">
+                        <h4>🏋️ Gym Workout — Push Day</h4>
+                        <ul>
+                            <li>Warm-up: 5 min light cardio</li>
+                            <li>Bench Press: 4 sets × 8-10 reps</li>
+                            <li>Overhead Press: 3 sets × 10 reps</li>
+                            <li>Incline Dumbbell Press: 3 sets × 12 reps</li>
+                            <li>Lateral Raises: 3 sets × 15 reps</li>
+                            <li>Tricep Pushdowns: 3 sets × 12 reps</li>
+                            <li>Cool down: stretch chest & shoulders</li>
+                        </ul>
+                        
+                        <h4>📝 Edit Workout</h4>
+                        <textarea class="editable-area" id="notes-morning" placeholder="Modify workout, log weights, add notes..." oninput="saveNotes('morning')">Push day - focus on chest and shoulders. Aim for progressive overload. Last bench: 135lbs × 8 reps.</textarea>
+                    </div>
+                </div>
+            </li>
+            
+            <li class="task-item" data-task="study">
+                <div class="task-row" onclick="toggleTask('study')">
+                    <div class="checkbox" id="cb-study"></div>
+                    <div class="task-text" id="txt-study">
+                        <div class="task-title">9:00 AM — Network+ Study Block</div>
+                        <div class="task-meta">Ports & Protocols (TCP/UDP, common ports)</div>
+                        <div class="expand-hint">👆 Tap for study plan</div>
+                    </div>
+                </div>
+                <div class="task-details" id="details-study">
+                    <div class="task-details-content">
+                        <h4>📚 Study Plan — 2 Hours</h4>
+                        <ul>
+                            <li>Watch: Professor Messer — Ports & Protocols (30 min)</li>
+                            <li>Take notes on TCP vs UDP differences</li>
+                            <li>Flashcards: Memorize 15 common ports</li>
+                            <li>Practice: SubnetCalculator.net exercises</li>
+                            <li>Quiz: 10 questions on yesterday's material (OSI Model)</li>
+                        </ul>
+                        
+                        <h4>🎯 Key Ports to Memorize</h4>
+                        <ul>
+                            <li>20/21 — FTP (File Transfer)</li>
+                            <li>22 — SSH (Secure Shell)</li>
+                            <li>25 — SMTP (Email)</li>
+                            <li>53 — DNS</li>
+                            <li>80 — HTTP</li>
+                            <li>110 — POP3</li>
+                            <li>143 — IMAP</li>
+                            <li>443 — HTTPS</li>
+                            <li>3389 — RDP (Remote Desktop)</li>
+                        </ul>
+                        
+                        <h4>✍️ Study Notes</h4>
+                        <textarea class="editable-area" id="notes-study" placeholder="Log what you learned, questions to review..." oninput="saveNotes('study')"></textarea>
+                    </div>
+                </div>
+            </li>
+            
+            <li class="task-item" data-task="french">
+                <div class="task-row" onclick="toggleTask('french')">
+                    <div class="checkbox" id="cb-french"></div>
+                    <div class="task-text" id="txt-french">
+                        <div class="task-title">1:00 PM — French Study</div>
+                        <div class="task-meta">1-2 hour session</div>
+                        <div class="expand-hint">👆 Tap for resources</div>
+                    </div>
+                </div>
+                <div class="task-details" id="details-french">
+                    <div class="task-details-content">
+                        <h4>🇫🇷 French Study Resources</h4>
+                        <ul>
+                            <li>Duolingo — Daily streak (maintain!)</li>
+                            <li>Busuu or Babbel — Structured lessons</li>
+                            <li>YouTube: Easy French or Français avec Pierre</li>
+                            <li>Anki deck: French vocabulary</li>
+                        </ul>
+                        
+                        <h4>📝 Today's Focus</h4>
+                        <textarea class="editable-area" id="notes-french" placeholder="What did you study today? New words learned?" oninput="saveNotes('french')"></textarea>
+                    </div>
+                </div>
+            </li>
+            
+            <li class="task-item" data-task="work">
+                <div class="task-row" onclick="toggleTask('work')">
+                    <div class="checkbox" id="cb-work"></div>
+                    <div class="task-text" id="txt-work">
+                        <div class="task-title">4:00-10:00 PM — Work</div>
+                        <div class="task-meta">Monday shift • Mon/Wed/Fri schedule</div>
+                    </div>
+                </div>
+                <div class="task-details" id="details-work">
+                    <div class="task-details-content">
+                        <h4>💼 Work Schedule</h4>
+                        <ul>
+                            <li>Mon/Wed/Fri: 4:00 PM - 10:00 PM</li>
+                            <li>Tue/Thu/Sat/Sun: Study days</li>
+                        </ul>
+                        
+                        <h4>📝 Work Notes</h4>
+                        <textarea class="editable-area" id="notes-work" placeholder="Log work tasks, hours, notes..." oninput="saveNotes('work')"></textarea>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Journal Section -->
+    <div class="journal-section">
+        <div class="journal-header">
+            <h2><span class="icon">📖</span> Daily Journal</h2>
+            <span class="save-indicator" id="save-indicator">✓ Saved</span>
+        </div>
+        
+        <div class="journal-entries" id="journal-entries">
+            <!-- Entries loaded from localStorage -->
+        </div>
+        
+        <div class="add-journal-btn" id="add-journal-btn" onclick="showJournalInput()">
+            + Add Journal Entry
+        </div>
+        
+        <div class="journal-input-area" id="journal-input">
+            <textarea class="editable-area" id="journal-text" placeholder="How was your day? What did you accomplish? What are you grateful for?" rows="4"></textarea>
+            <div class="journal-actions">
+                <button class="btn btn-secondary" onclick="hideJournalInput()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveJournalEntry()">Save Entry</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Network+ Progress -->
+    <div class="card">
+        <div class="card-header">
+            <span class="icon">🌐</span>
+            <h2>Network+ Study (N10-009)</h2>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill blue" style="width: 20%"></div>
+        </div>
+        <div class="progress-text">Week 1, Day 6 — 20% of course</div>
+        
+        <div class="stat-row">
+            <span class="stat-label">Current Topic</span>
+            <span class="stat-value">Ports & Protocols</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Primary Resource</span>
+            <span class="stat-value">Professor Messer</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Practice Tests</span>
+            <span class="stat-value badge upcoming">Weekly (Day 7)</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Exam Target</span>
+            <span class="stat-value badge pending">March 17</span>
+        </div>
+    </div>
+
+    <!-- Active Projects -->
+    <div class="card">
+        <div class="card-header">
+            <span class="icon">🚀</span>
+            <h2>Active Projects</h2>
+        </div>
+        
+        <div class="stat-row">
+            <span class="stat-label">Nigerian Real Estate App</span>
+            <span class="stat-value badge upcoming">Phase 0</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">CompTIA Network+</span>
+            <span class="stat-value badge active">In Progress</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">French Language</span>
+            <span class="stat-value badge active">Daily</span>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card">
+        <div class="card-header">
+            <span class="icon">⚡</span>
+            <h2>Quick Actions</h2>
+        </div>
+        
+        <div class="quick-actions">
+            <button class="action-btn" onclick="askAI('What should I study today?')">
+                <span class="emoji">📚</span>
+                Study Plan
+            </button>
+            <button class="action-btn" onclick="askAI('Quiz me on yesterday\'s material')">
+                <span class="emoji">❓</span>
+                Quick Quiz
+            </button>
+            <button class="action-btn" onclick="askAI('Update my progress')">
+                <span class="emoji">✅</span>
+                Log Progress
+            </button>
+            <button class="action-btn" onclick="askAI('What are my priorities?')">
+                <span class="emoji">🎯</span>
+                Priorities
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Bottom Navigation -->
+    <div class="nav-bar">
+        <a href="index.html" class="nav-item active">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a href="stats.html" class="nav-item">
+            <span class="nav-icon">📊</span>
+            <span>Stats</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+            <span class="nav-icon">⚙️</span>
+            <span>Settings</span>
+        </a>
+    </div>
+
+    <!-- Floating AI Button -->
+    <button class="fab-ai" id="fab-ai" onclick="openAIChat()" aria-label="Open AI Assistant">
+        <span class="fab-icon">🤖</span>
+    </button>
+
+    <!-- AI Chat Modal -->
+    <div class="ai-modal" id="ai-modal">
+        <div class="ai-modal-header">
+            <div class="ai-modal-title">
+                <span class="ai-modal-icon">🪨</span>
+                <span>Benjamin</span>
+            </div>
+            <button class="ai-modal-close" onclick="closeAIChat()">&times;</button>
+        </div>
+        <div class="ai-modal-body">
+            <div class="ai-messages" id="ai-messages">
+                <div class="ai-message assistant">
+                    <div class="ai-message-content">Hey Junior. What do you need?</div>
+                </div>
+            </div>
+            <div class="ai-input-wrapper">
+                <input type="text" class="ai-chat-input" id="ai-chat-input" placeholder="Ask me anything..." onkeypress="handleChatKeypress(event)">
+                <button class="ai-chat-send" onclick="sendChatMessage()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== SERVICE WORKER REGISTRATION ====================
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(registration => {
+                    console.log('Service Worker registered:', registration);
+                })
+                .catch(error => {
+                    console.log('Service Worker registration failed:', error);
+                });
+        }
+
+        // ==================== NOTIFICATIONS ====================
+        let notificationSettings = JSON.parse(localStorage.getItem('notificationSettings') || '{}');
+        let suggestedTask = null;
+
+        function requestNotificationPermission() {
+            if (!('Notification' in window)) {
+                showToast('Notifications not supported', 'Your browser doesn\'t support notifications', '❌');
+                return;
+            }
+
+            Notification.requestPermission().then(permission => {
+                const notifDiv = document.getElementById('notif-permission');
+                const notifBtn = document.getElementById('notif-btn');
+                
+                if (permission === 'granted') {
+                    notifDiv.classList.add('granted');
+                    notifBtn.textContent = 'Enabled';
+                    notifBtn.disabled = true;
+                    showToast('Notifications enabled!', 'You\'ll now receive study reminders and task nudges', '🔔');
+                    scheduleDefaultReminders();
+                } else {
+                    notifDiv.classList.add('denied');
+                    notifBtn.textContent = 'Blocked';
+                    notifBtn.disabled = true;
+                }
+                
+                localStorage.setItem('notificationPermission', permission);
+            });
+        }
+
+        function checkNotificationPermission() {
+            if (!('Notification' in window)) return;
+            
+            const permission = Notification.permission;
+            const savedPermission = localStorage.getItem('notificationPermission');
+            const notifDiv = document.getElementById('notif-permission');
+            const notifBtn = document.getElementById('notif-btn');
+            
+            if (permission === 'granted') {
+                notifDiv.classList.add('granted');
+                notifBtn.textContent = 'Enabled';
+                notifBtn.disabled = true;
+            } else if (permission === 'denied') {
+                notifDiv.classList.add('denied');
+                notifBtn.textContent = 'Blocked';
+                notifBtn.disabled = true;
+            }
+        }
+
+        function scheduleNotification(title, body, delayMinutes, tag = 'default') {
+            if (!('Notification' in window) || Notification.permission !== 'granted') {
+                return false;
+            }
+
+            const timestamp = Date.now() + (delayMinutes * 60 * 1000);
+            
+            // Store scheduled notification
+            let scheduled = JSON.parse(localStorage.getItem('scheduledNotifications') || '[]');
+            scheduled.push({ title, body, timestamp, tag, id: Date.now() });
+            localStorage.setItem('scheduledNotifications', JSON.stringify(scheduled));
+
+            // If service worker is active, use it
+            if (navigator.serviceWorker.controller) {
+                navigator.serviceWorker.controller.postMessage({
+                    type: 'SCHEDULE_NOTIFICATION',
+                    notification: { title, body, timestamp, tag }
+                });
+            }
+
+            return true;
+        }
+
+        function scheduleDefaultReminders() {
+            // Schedule study reminder for 9 AM tomorrow if not already done today
+            scheduleNotification(
+                '⏰ Study Time!',
+                'Your Network+ study session is ready. Let\'s crush those ports and protocols!',
+                60, // 1 hour from now as demo
+                'study-reminder'
+            );
+
+            // Gym reminder
+            scheduleNotification(
+                '💪 Gym Time!',
+                'Time for your workout. Push day today!',
+                120, // 2 hours from now as demo
+                'gym-reminder'
+            );
+        }
+
+        function toggleNotification(type) {
+            const toggle = document.getElementById('toggle-' + type);
+            const isActive = toggle.classList.contains('active');
+            
+            if (isActive) {
+                toggle.classList.remove('active');
+                notificationSettings[type] = false;
+            } else {
+                toggle.classList.add('active');
+                notificationSettings[type] = true;
+            }
+            
+            localStorage.setItem('notificationSettings', JSON.stringify(notificationSettings));
+            updateRemindersCount();
+        }
+
+        function loadNotificationSettings() {
+            for (const type in notificationSettings) {
+                if (notificationSettings[type]) {
+                    document.getElementById('toggle-' + type)?.classList.add('active');
+                }
+            }
+            updateRemindersCount();
+        }
+
+        function updateRemindersCount() {
+            const count = Object.values(notificationSettings).filter(v => v).length;
+            document.getElementById('reminders-count').textContent = count + ' active';
+        }
+
+        // ==================== SPACED REPETITION SYSTEM ====================
+        let studyTopics = JSON.parse(localStorage.getItem('studyTopics') || '[]');
+
+        // Default topics if none exist
+        if (studyTopics.length === 0) {
+            studyTopics = [
+                {
+                    id: 'sr-1',
+                    topic: 'OSI Model Layers',
+                    notes: '7 layers: Physical, Data Link, Network, Transport, Session, Presentation, Application',
+                    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                    nextReview: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+                    interval: 1,
+                    repetitions: 1,
+                    easeFactor: 2.5
+                },
+                {
+                    id: 'sr-2',
+                    topic: 'TCP vs UDP',
+                    notes: 'TCP: reliable, ordered, connection-oriented. UDP: fast, connectionless, unreliable',
+                    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+                    nextReview: new Date().toISOString(),
+                    interval: 1,
+                    repetitions: 0,
+                    easeFactor: 2.5
+                }
+            ];
+            localStorage.setItem('studyTopics', JSON.stringify(studyTopics));
+        }
+
+        function calculateNextInterval(repetitions, easeFactor, quality) {
+            // SM-2 algorithm simplified
+            let newEaseFactor = easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+            if (newEaseFactor < 1.3) newEaseFactor = 1.3;
+
+            let interval;
+            if (repetitions === 0) interval = 1;
+            else if (repetitions === 1) interval = 6;
+            else interval = Math.round(studyTopics.find(t => t.id === currentReviewId)?.interval * newEaseFactor || 1);
+
+            return { interval, easeFactor: newEaseFactor };
+        }
+
+        let currentReviewId = null;
+
+        function loadSRItems() {
+            const container = document.getElementById('sr-items');
+            const now = new Date();
+            
+            // Sort by next review date
+            const sorted = studyTopics.sort((a, b) => new Date(a.nextReview) - new Date(b.nextReview));
+            
+            // Count due items
+            const dueItems = sorted.filter(t => new Date(t.nextReview) <= now);
+            const dueCount = dueItems.length;
+            
+            // Update progress
+            const progress = Math.min(100, (dueCount / Math.max(1, studyTopics.length)) * 100);
+            document.getElementById('sr-progress').style.width = progress + '%';
+            document.getElementById('sr-progress-text').textContent = 
+                dueCount === 0 ? 'All caught up! 🎉' : `${dueCount} due for review`;
+            
+            // Show up to 5 items
+            container.innerHTML = '';
+            const displayItems = dueCount > 0 ? dueItems.slice(0, 5) : sorted.slice(0, 3);
+            
+            displayItems.forEach(item => {
+                const isDue = new Date(item.nextReview) <= now;
+                const isSoon = !isDue && (new Date(item.nextReview) - now) < 24 * 60 * 60 * 1000;
+                
+                const div = document.createElement('div');
+                div.className = 'sr-item ' + (isDue ? 'due' : isSoon ? 'review-soon' : '');
+                div.innerHTML = `
+                    <div class="sr-header">
+                        <span class="sr-topic">${escapeHtml(item.topic)}</span>
+                        <span class="sr-interval">${isDue ? 'Due now' : formatTimeUntil(item.nextReview)}</span>
+                    </div>
+                    <div class="sr-meta">
+                        <span>Interval: ${item.interval} day${item.interval !== 1 ? 's' : ''}</span>
+                        <span>•</span>
+                        <span>Reviews: ${item.repetitions}</span>
+                    </div>
+                    ${isDue ? `
+                    <div class="sr-actions" id="sr-actions-${item.id}">
+                        <button class="sr-btn sr-btn-hard" onclick="reviewItem('${item.id}', 1)">Hard (1d)</button>
+                        <button class="sr-btn sr-btn-good" onclick="reviewItem('${item.id}', 3)">Good (${Math.round(item.interval * item.easeFactor)}d)</button>
+                        <button class="sr-btn sr-btn-easy" onclick="reviewItem('${item.id}', 5)">Easy (${Math.round(item.interval * item.easeFactor * 1.3)}d)</button>
+                    </div>
+                    ` : ''}
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function reviewItem(id, quality) {
+            const item = studyTopics.find(t => t.id === id);
+            if (!item) return;
+
+            const result = calculateNextInterval(item.repetitions, item.easeFactor, quality);
+            
+            item.repetitions++;
+            item.easeFactor = result.easeFactor;
+            item.interval = result.interval;
+            item.lastReviewed = new Date().toISOString();
+            item.nextReview = new Date(Date.now() + result.interval * 24 * 60 * 60 * 1000).toISOString();
+
+            // Log study session
+            logStudySession(item.topic, quality >= 3 ? 0.5 : 0.25);
+
+            localStorage.setItem('studyTopics', JSON.stringify(studyTopics));
+            loadSRItems();
+            showToast('Review recorded!', `Next review in ${result.interval} days`, '✅');
+        }
+
+        function showSRInput() {
+            document.getElementById('add-sr-btn').style.display = 'none';
+            document.getElementById('sr-input-area').classList.add('show');
+            document.getElementById('sr-topic-input').focus();
+        }
+
+        function hideSRInput() {
+            document.getElementById('add-sr-btn').style.display = 'block';
+            document.getElementById('sr-input-area').classList.remove('show');
+            document.getElementById('sr-topic-input').value = '';
+            document.getElementById('sr-notes-input').value = '';
+        }
+
+        function addStudyTopic() {
+            const topic = document.getElementById('sr-topic-input').value.trim();
+            const notes = document.getElementById('sr-notes-input').value.trim();
+            
+            if (!topic) return;
+
+            const newTopic = {
+                id: 'sr-' + Date.now(),
+                topic: topic,
+                notes: notes,
+                createdAt: new Date().toISOString(),
+                nextReview: new Date().toISOString(),
+                interval: 0,
+                repetitions: 0,
+                easeFactor: 2.5
+            };
+
+            studyTopics.push(newTopic);
+            localStorage.setItem('studyTopics', JSON.stringify(studyTopics));
+            
+            hideSRInput();
+            loadSRItems();
+            showToast('Topic added!', 'Review scheduled for now', '📚');
+        }
+
+        function formatTimeUntil(dateStr) {
+            const diff = new Date(dateStr) - new Date();
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const days = Math.floor(hours / 24);
+            
+            if (days > 0) return `In ${days} day${days !== 1 ? 's' : ''}`;
+            if (hours > 0) return `In ${hours} hour${hours !== 1 ? 's' : ''}`;
+            return 'Soon';
+        }
+
+        function logStudySession(topic, hours) {
+            let sessions = JSON.parse(localStorage.getItem('studySessions') || '[]');
+            sessions.push({
+                topic: topic,
+                hours: hours,
+                timestamp: new Date().toISOString()
+            });
+            localStorage.setItem('studySessions', JSON.stringify(sessions));
+            updateWeeklyReview();
+        }
+
+        // ==================== STREAK COUNTER ====================
+        let streakData = JSON.parse(localStorage.getItem('streakData') || '{}');
+
+        function initStreakData() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Initialize default structure
+            ['network', 'french', 'gym'].forEach(type => {
+                if (!streakData[type]) {
+                    streakData[type] = {
+                        current: 0,
+                        lastDate: null,
+                        history: {}
+                    };
+                }
+            });
+        }
+
+        function loadStreaks() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            // Calculate current streaks
+            ['network', 'french', 'gym'].forEach(type => {
+                let streak = 0;
+                let checkDate = new Date();
+                
+                while (true) {
+                    const dateStr = checkDate.toISOString().split('T')[0];
+                    if (streakData[type].history[dateStr]) {
+                        streak++;
+                        checkDate.setDate(checkDate.getDate() - 1);
+                    } else if (dateStr === today) {
+                        // Don't break streak if today isn't done yet
+                        checkDate.setDate(checkDate.getDate() - 1);
+                    } else {
+                        break;
+                    }
+                }
+                
+                streakData[type].current = streak;
+                document.getElementById('streak-' + type).textContent = streak;
+            });
+
+            // Render heat map for last 7 days
+            const grid = document.getElementById('streak-grid');
+            grid.innerHTML = '';
+            
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateStr = date.toISOString().split('T')[0];
+                const dayName = date.toLocaleDateString('en-US', { weekday: 'narrow' });
+                
+                // Count activities for this day
+                let activities = 0;
+                let total = 3;
+                ['network', 'french', 'gym'].forEach(type => {
+                    if (streakData[type].history[dateStr]) activities++;
+                });
+                
+                const div = document.createElement('div');
+                div.className = 'streak-day';
+                if (i === 0) {
+                    div.classList.add(activities === total ? 'active' : activities > 0 ? 'partial' : '');
+                } else {
+                    if (activities === 0) div.classList.add('missed');
+                    else if (activities === total) div.classList.add('active');
+                    else div.classList.add('partial');
+                }
+                div.textContent = dayName;
+                div.title = `${date.toLocaleDateString()}: ${activities}/${total} activities`;
+                grid.appendChild(div);
+            }
+            
+            localStorage.setItem('streakData', JSON.stringify(streakData));
+        }
+
+        function logStreak(type) {
+            const today = new Date().toISOString().split('T')[0];
+            
+            if (!streakData[type]) {
+                streakData[type] = { current: 0, lastDate: null, history: {} };
+            }
+            
+            streakData[type].history[today] = true;
+            streakData[type].lastDate = today;
+            
+            localStorage.setItem('streakData', JSON.stringify(streakData));
+            loadStreaks();
+            
+            const typeNames = { network: 'Network+', french: 'French', gym: 'Gym' };
+            showToast('Streak logged!', `${typeNames[type]} marked as done today`, '🔥');
+            
+            // Also log as study session if applicable
+            if (type === 'network') logStudySession('Network+', 2);
+            if (type === 'french') logStudySession('French', 1);
+        }
+
+        // ==================== WEEKLY REVIEW ====================
+        function updateWeeklyReview() {
+            const now = new Date();
+            const weekStart = new Date(now);
+            weekStart.setDate(now.getDate() - now.getDay());
+            weekStart.setHours(0, 0, 0, 0);
+
+            let studyHours = 0;
+            let networkHours = 0;
+            let frenchHours = 0;
+            let securityHours = 0;
+            let gymSessions = 0;
+            let tasksCompleted = 0;
+
+            // Calculate study hours
+            const sessions = JSON.parse(localStorage.getItem('studySessions') || '[]');
+            sessions.forEach(session => {
+                const sessionDate = new Date(session.timestamp);
+                if (sessionDate >= weekStart) {
+                    studyHours += session.hours || 0;
+                    if (session.topic?.toLowerCase().includes('network')) networkHours += session.hours || 0;
+                    else if (session.topic?.toLowerCase().includes('french')) frenchHours += session.hours || 0;
+                    else if (session.topic?.toLowerCase().includes('security')) securityHours += session.hours || 0;
+                }
+            });
+
+            // Count gym sessions from streak data
+            if (streakData.gym && streakData.gym.history) {
+                for (const [date, done] of Object.entries(streakData.gym.history)) {
+                    const sessionDate = new Date(date);
+                    if (done && sessionDate >= weekStart) gymSessions++;
+                }
+            }
+
+            // Count completed tasks
+            const completed = JSON.parse(localStorage.getItem('completedTasks') || '{}');
+            tasksCompleted = Object.values(completed).filter(v => v).length;
+
+            // Update display
+            document.getElementById('weekly-study-hours').textContent = Math.round(studyHours * 10) / 10;
+            document.getElementById('weekly-gym-sessions').textContent = gymSessions;
+            document.getElementById('weekly-tasks-completed').textContent = tasksCompleted;
+            document.getElementById('weekly-network-hours').textContent = Math.round(networkHours * 10) / 10 + ' hrs';
+            document.getElementById('weekly-french-hours').textContent = Math.round(frenchHours * 10) / 10 + ' hrs';
+            document.getElementById('weekly-security-hours').textContent = Math.round(securityHours * 10) / 10 + ' hrs';
+        }
+
+        // ==================== AI CHAT MODAL ====================
+        let chatHistory = JSON.parse(localStorage.getItem('aiChatHistory') || '[]');
+        let isChatOpen = false;
+
+        function openAIChat() {
+            const modal = document.getElementById('ai-modal');
+            modal.classList.add('show');
+            isChatOpen = true;
+            
+            // Load chat history
+            loadChatMessages();
+            
+            // Focus input
+            setTimeout(() => {
+                document.getElementById('ai-chat-input').focus();
+            }, 100);
+        }
+
+        function closeAIChat() {
+            const modal = document.getElementById('ai-modal');
+            modal.classList.remove('show');
+            isChatOpen = false;
+        }
+
+        function loadChatMessages() {
+            const container = document.getElementById('ai-messages');
+            container.innerHTML = '';
+            
+            // Add default greeting if no history
+            if (chatHistory.length === 0) {
+                addChatMessage('assistant', 'Hey Junior. What do you need?');
+            } else {
+                chatHistory.forEach(msg => {
+                    addChatMessage(msg.role, msg.content, false);
+                });
+            }
+            
+            scrollToBottom();
+        }
+
+        function addChatMessage(role, content, save = true) {
+            const container = document.getElementById('ai-messages');
+            const div = document.createElement('div');
+            div.className = `ai-message ${role}`;
+            div.innerHTML = `<div class="ai-message-content">${escapeHtml(content)}</div>`;
+            container.appendChild(div);
+            
+            if (save) {
+                chatHistory.push({ role, content, timestamp: Date.now() });
+                // Keep only last 50 messages
+                if (chatHistory.length > 50) {
+                    chatHistory = chatHistory.slice(-50);
+                }
+                localStorage.setItem('aiChatHistory', JSON.stringify(chatHistory));
+                scrollToBottom();
+            }
+        }
+
+        function scrollToBottom() {
+            const container = document.getElementById('ai-messages');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function handleChatKeypress(event) {
+            if (event.key === 'Enter') {
+                sendChatMessage();
+            }
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('ai-chat-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addChatMessage('user', message);
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            try {
+                // For now, just echo back with context-aware responses
+                // In the future, this would connect to the actual AI backend
+                await new Promise(r => setTimeout(r, 800));
+                
+                removeTypingIndicator();
+                
+                const response = generateAIResponse(message);
+                addChatMessage('assistant', response);
+                
+            } catch (error) {
+                removeTypingIndicator();
+                addChatMessage('assistant', 'Sorry, something went wrong. Try again?');
+            }
+        }
+
+        function showTypingIndicator() {
+            const container = document.getElementById('ai-messages');
+            const div = document.createElement('div');
+            div.className = 'ai-message assistant typing-indicator';
+            div.id = 'typing-indicator';
+            div.innerHTML = '<div class="ai-message-content"><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>';
+            container.appendChild(div);
+            scrollToBottom();
+        }
+
+        function removeTypingIndicator() {
+            const indicator = document.getElementById('typing-indicator');
+            if (indicator) indicator.remove();
+        }
+
+        function generateAIResponse(message) {
+            const lower = message.toLowerCase();
+            
+            // Simple context-aware responses
+            if (lower.includes('study') || lower.includes('network') || lower.includes('ports')) {
+                return "You're on Day 6 of Network+. Today's focus: Ports & Protocols. Key ports to memorize: 22 (SSH), 53 (DNS), 80 (HTTP), 443 (HTTPS). Want me to quiz you?";
+            }
+            if (lower.includes('gym') || lower.includes('workout')) {
+                return "Push day today: Bench, Overhead Press, Incline Dumbbell. Last bench was 135lbs × 8. Try to hit 9 reps today?";
+            }
+            if (lower.includes('french')) {
+                return "French study at 1 PM. Don't forget your Duolingo streak!";
+            }
+            if (lower.includes('task') || lower.includes('add') || lower.includes('todo')) {
+                return "I can add tasks to your spaced repetition queue. What topic do you want to study?";
+            }
+            if (lower.includes('streak')) {
+                const streaks = JSON.parse(localStorage.getItem('streakData') || '{}');
+                return `Current streaks: Network+ (${streaks.network?.current || 0}), French (${streaks.french?.current || 0}), Gym (${streaks.gym?.current || 0}). Keep it going!`;
+            }
+            if (lower.includes('progress') || lower.includes('how am i doing')) {
+                return "You're 20% through Network+ (Day 6 of 30). Sec+ starts March 18. Real estate app development begins around Day 61. On track!";
+            }
+            if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) {
+                return "Hey. What's up?";
+            }
+            if (lower.includes('help')) {
+                return "I can help with:\n• Study plans & quizzes\n• Task management\n• Streak tracking\n• Progress updates\n• Schedule reminders\n\nWhat do you need?";
+            }
+            
+            return "Got it. Anything else?";
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('ai-modal');
+            const fab = document.getElementById('fab-ai');
+            
+            if (isChatOpen && !modal.contains(e.target) && !fab.contains(e.target)) {
+                closeAIChat();
+            }
+        });
+
+        // ==================== EXISTING FUNCTIONS ====================
+        function updateDate() {
+            const now = new Date();
+            const options = { weekday: 'long', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', options);
+        }
+
+        // Task management
+        const completedTasks = JSON.parse(localStorage.getItem('completedTasks') || '{}');
+        const taskNotes = JSON.parse(localStorage.getItem('taskNotes') || '{}');
+        
+        function initTasks() {
+            for (const taskId in completedTasks) {
+                if (completedTasks[taskId]) {
+                    document.getElementById('cb-' + taskId)?.classList.add('done');
+                    document.getElementById('txt-' + taskId)?.classList.add('done');
+                }
+            }
+            
+            for (const taskId in taskNotes) {
+                const textarea = document.getElementById('notes-' + taskId);
+                if (textarea) textarea.value = taskNotes[taskId];
+            }
+        }
+        
+        function toggleTask(taskId) {
+            const details = document.getElementById('details-' + taskId);
+            const isOpen = details.classList.contains('open');
+            
+            document.querySelectorAll('.task-details').forEach(d => d.classList.remove('open'));
+            
+            if (!isOpen) {
+                details.classList.add('open');
+            }
+        }
+        
+        function completeTask(taskId, event) {
+            event.stopPropagation();
+            
+            const checkbox = document.getElementById('cb-' + taskId);
+            const text = document.getElementById('txt-' + taskId);
+            const isDone = checkbox.classList.contains('done');
+            
+            if (isDone) {
+                checkbox.classList.remove('done');
+                text.classList.remove('done');
+                completedTasks[taskId] = false;
+            } else {
+                checkbox.classList.add('done');
+                text.classList.add('done');
+                completedTasks[taskId] = true;
+            }
+            
+            localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+            updateWeeklyReview();
+        }
+        
+        document.querySelectorAll('.checkbox').forEach(cb => {
+            const taskItem = cb.closest('.task-item');
+            if (taskItem) {
+                const taskId = taskItem.dataset.task;
+                cb.onclick = (e) => completeTask(taskId, e);
+            }
+        });
+        
+        function saveNotes(taskId) {
+            const textarea = document.getElementById('notes-' + taskId);
+            if (textarea) {
+                taskNotes[taskId] = textarea.value;
+                localStorage.setItem('taskNotes', JSON.stringify(taskNotes));
+                showSaveIndicator();
+            }
+        }
+        
+        // Journal management
+        let journalEntries = JSON.parse(localStorage.getItem('journalEntries') || '[]');
+        
+        function loadJournalEntries() {
+            const container = document.getElementById('journal-entries');
+            container.innerHTML = '';
+            
+            journalEntries.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            journalEntries.forEach(entry => {
+                const div = document.createElement('div');
+                div.className = 'journal-entry';
+                div.innerHTML = `
+                    <div class="journal-date">${formatDate(entry.date)}</div>
+                    <div class="journal-text">${escapeHtml(entry.text)}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+        
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', { 
+                weekday: 'short', 
+                month: 'short', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function showJournalInput() {
+            document.getElementById('add-journal-btn').style.display = 'none';
+            document.getElementById('journal-input').classList.add('show');
+            document.getElementById('journal-text').focus();
+        }
+        
+        function hideJournalInput() {
+            document.getElementById('add-journal-btn').style.display = 'block';
+            document.getElementById('journal-input').classList.remove('show');
+            document.getElementById('journal-text').value = '';
+        }
+        
+        function saveJournalEntry() {
+            const text = document.getElementById('journal-text').value.trim();
+            if (!text) return;
+            
+            const entry = {
+                date: new Date().toISOString(),
+                text: text
+            };
+            
+            journalEntries.push(entry);
+            localStorage.setItem('journalEntries', JSON.stringify(journalEntries));
+            
+            loadJournalEntries();
+            hideJournalInput();
+            showSaveIndicator();
+        }
+        
+        function showSaveIndicator() {
+            const indicator = document.getElementById('save-indicator');
+            indicator.classList.add('show');
+            setTimeout(() => indicator.classList.remove('show'), 2000);
+        }
+
+        // Toast notifications
+        function showToast(title, message, icon = '🔔') {
+            const container = document.getElementById('toast-container');
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <span class="toast-icon">${icon}</span>
+                <div class="toast-content">
+                    <div class="toast-title">${escapeHtml(title)}</div>
+                    <div class="toast-message">${escapeHtml(message)}</div>
+                </div>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Trigger animation
+            setTimeout(() => toast.classList.add('show'), 10);
+            
+            // Remove after 4 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+        
+        function askAI(prompt) {
+            const message = "📱 Dashboard: " + prompt;
+            console.log(message);
+            
+            window.location.href = "tg://resolve?domain=tragetop";
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(prompt);
+            }
+        }
+        
+        // Initialize everything
+        updateDate();
+        initTasks();
+        loadJournalEntries();
+        checkNotificationPermission();
+        loadNotificationSettings();
+        initStreakData();
+        loadStreaks();
+        loadSRItems();
+        updateWeeklyReview();
+
+        // Check for scheduled notifications every minute
+        setInterval(() => {
+            if (!('Notification' in window) || Notification.permission !== 'granted') return;
+            
+            const now = Date.now();
+            let scheduled = JSON.parse(localStorage.getItem('scheduledNotifications') || '[]');
+            
+            scheduled.forEach(notif => {
+                if (notif.timestamp <= now && !notif.shown) {
+                    new Notification(notif.title, {
+                        body: notif.body,
+                        icon: 'icon.svg',
+                        tag: notif.tag
+                    });
+                    notif.shown = true;
+                }
+            });
+            
+            localStorage.setItem('scheduledNotifications', JSON.stringify(scheduled));
+        }, 60000);
+
+        // Offline Sync & Background Sync Management
+        let syncQueue = JSON.parse(localStorage.getItem('syncQueue') || '[]');
+        let isOnline = navigator.onLine;
+        let swRegistration = null;
+
+        // Register Service Worker with sync capabilities
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then((registration) => {
+                    swRegistration = registration;
+                    console.log('✅ Service Worker registered');
+                    
+                    // Check for background sync support
+                    if ('sync' in registration) {
+                        console.log('✅ Background Sync supported');
+                    }
+                    
+                    // Listen for messages from SW
+                    navigator.serviceWorker.addEventListener('message', (event) => {
+                        if (event.data.type === 'SYNC_COMPLETE') {
+                            showToast('Sync Complete', `${event.data.failed} items failed to sync`);
+                        }
+                        if (event.data.type === 'NOTIFICATION_SHOWN') {
+                            markNotificationShown(event.data.id);
+                        }
+                    });
+                })
+                .catch((err) => console.log('SW registration failed:', err));
+        }
+
+        // Online/Offline detection
+        window.addEventListener('online', () => {
+            isOnline = true;
+            showToast('Back Online', 'Syncing queued data...', '🌐');
+            syncData();
+            updateConnectionStatus();
+        });
+
+        window.addEventListener('offline', () => {
+            isOnline = false;
+            showToast('Offline Mode', 'Changes will sync when back online', '📴');
+            updateConnectionStatus();
+        });
+
+        function updateConnectionStatus() {
+            const existing = document.getElementById('connection-status');
+            if (existing) existing.remove();
+            
+            if (!isOnline) {
+                const status = document.createElement('div');
+                status.id = 'connection-status';
+                status.style.cssText = 'position:fixed;top:0;left:0;right:0;background:#ef4444;color:#fff;text-align:center;padding:8px;font-size:13px;font-weight:600;z-index:1000;';
+                status.textContent = '📴 Offline Mode - Changes saved locally';
+                document.body.appendChild(status);
+                document.body.style.paddingTop = '40px';
+            } else {
+                document.body.style.paddingTop = '';
+            }
+        }
+
+        // Queue data for background sync
+        function queueForSync(data, endpoint = '/api/sync') {
+            const item = {
+                id: Date.now().toString(),
+                url: endpoint,
+                method: 'POST',
+                data: data,
+                timestamp: Date.now(),
+                retries: 0
+            };
+            
+            syncQueue.push(item);
+            localStorage.setItem('syncQueue', JSON.stringify(syncQueue));
+            
+            // Try to sync immediately if online
+            if (isOnline && swRegistration) {
+                syncData();
+            }
+            
+            // Register for background sync if supported
+            if (swRegistration && 'sync' in swRegistration) {
+                swRegistration.sync.register('sync-data').catch(() => {
+                    // Fallback: sync directly
+                    syncData();
+                });
+            }
+            
+            return item.id;
+        }
+
+        // Process sync queue
+        async function syncData() {
+            if (!isOnline || syncQueue.length === 0) return;
+            
+            const failed = [];
+            
+            for (const item of syncQueue) {
+                try {
+                    // Send to server
+                    const response = await fetch(item.url, {
+                        method: item.method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(item.data)
+                    });
+                    
+                    if (!response.ok) throw new Error('Sync failed');
+                    
+                    // Success - remove from queue
+                    console.log('✅ Synced:', item.id);
+                    
+                } catch (error) {
+                    item.retries++;
+                    if (item.retries < 5) {
+                        failed.push(item);
+                    } else {
+                        console.log('❌ Max retries exceeded:', item.id);
+                    }
+                }
+            }
+            
+            syncQueue = failed;
+            localStorage.setItem('syncQueue', JSON.stringify(syncQueue));
+            
+            // Send queue to SW for processing
+            if (swRegistration && swRegistration.active) {
+                swRegistration.active.postMessage({
+                    type: 'QUEUE_SYNC',
+                    queue: syncQueue
+                });
+            }
+            
+            if (failed.length === 0) {
+                showToast('All Data Synced', 'Everything is up to date! ✅');
+            }
+        }
+
+        // Mark notification as shown
+        function markNotificationShown(id) {
+            let scheduled = JSON.parse(localStorage.getItem('scheduledNotifications') || '[]');
+            const notif = scheduled.find(n => n.id === id);
+            if (notif) {
+                notif.shown = true;
+                localStorage.setItem('scheduledNotifications', JSON.stringify(scheduled));
+            }
+        }
+
+        // Enhanced schedule notification with sync
+        function scheduleNotificationWithSync(title, body, delayMinutes, tag) {
+            const id = Date.now().toString();
+            const timestamp = Date.now() + (delayMinutes * 60 * 1000);
+            
+            const notification = {
+                id,
+                title,
+                body,
+                timestamp,
+                tag,
+                shown: false
+            };
+            
+            // Save locally
+            let scheduled = JSON.parse(localStorage.getItem('scheduledNotifications') || '[]');
+            scheduled.push(notification);
+            localStorage.setItem('scheduledNotifications', JSON.stringify(scheduled));
+            
+            // Queue for sync if online
+            if (isOnline) {
+                queueForSync({ type: 'notification', notification }, '/api/notifications');
+            }
+            
+            // Send to SW for scheduling
+            if (swRegistration && swRegistration.active) {
+                swRegistration.active.postMessage({
+                    type: 'SCHEDULE_NOTIFICATION',
+                    notification
+                });
+            }
+            
+            return id;
+        }
+
+        // Backup all data to localStorage (comprehensive)
+        function backupAllData() {
+            const backup = {
+                timestamp: Date.now(),
+                data: {
+                    completedTasks: JSON.parse(localStorage.getItem('completedTasks') || '{}'),
+                    taskNotes: JSON.parse(localStorage.getItem('taskNotes') || '{}'),
+                    journalEntries: JSON.parse(localStorage.getItem('journalEntries') || '[]'),
+                    srItems: JSON.parse(localStorage.getItem('srItems') || '[]'),
+                    streaks: JSON.parse(localStorage.getItem('streaks') || '{}'),
+                    streakData: JSON.parse(localStorage.getItem('streakData') || '{}'),
+                    notificationSettings: JSON.parse(localStorage.getItem('notificationSettings') || '{}'),
+                    scheduledNotifications: JSON.parse(localStorage.getItem('scheduledNotifications') || '[]'),
+                    syncQueue: syncQueue
+                }
+            };
+            
+            localStorage.setItem('dashboardBackup', JSON.stringify(backup));
+            return backup;
+        }
+
+        // Restore from backup
+        function restoreFromBackup() {
+            const backup = JSON.parse(localStorage.getItem('dashboardBackup') || '{}');
+            if (!backup.data) return false;
+            
+            Object.entries(backup.data).forEach(([key, value]) => {
+                if (value !== undefined && value !== null) {
+                    localStorage.setItem(key, JSON.stringify(value));
+                }
+            });
+            
+            return true;
+        }
+
+        // Auto-backup every 5 minutes
+        setInterval(backupAllData, 5 * 60 * 1000);
+
+        // Initialize offline features
+        function initOfflineSync() {
+            updateConnectionStatus();
+            
+            // Try to restore if fresh load
+            if (!localStorage.getItem('completedTasks')) {
+                restoreFromBackup();
+            }
+            
+            // Sync on startup if online
+            if (isOnline && syncQueue.length > 0) {
+                setTimeout(syncData, 2000);
+            }
+        }
+
+        // Override existing functions to use sync
+        const originalSaveJournal = saveJournalEntry;
+        saveJournalEntry = function() {
+            originalSaveJournal();
+            queueForSync({ type: 'journal', entry: journalEntries[journalEntries.length - 1] });
+        };
+
+        // Export data as JSON file (for manual backup)
+        function exportData() {
+            const data = backupAllData();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `dashboard-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            
+            URL.revokeObjectURL(url);
+            showToast('Data Exported', 'Backup file downloaded! 💾');
+        }
+
+        // Import data from JSON
+        function importData(jsonString) {
+            try {
+                const data = JSON.parse(jsonString);
+                if (data.data) {
+                    Object.entries(data.data).forEach(([key, value]) => {
+                        localStorage.setItem(key, JSON.stringify(value));
+                    });
+                    location.reload();
+                    return true;
+                }
+            } catch (e) {
+                showToast('Import Failed', 'Invalid backup file', '❌');
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>
