@@ -1242,9 +1242,9 @@
         </div>
 
         <div class="progress-bar">
-            <div class="progress-fill green" style="width: 20%"></div>
+            <div class="progress-fill green" id="challenge-progress" style="width: 20%"></div>
         </div>
-        <div class="progress-text">Day 6 of 30 — Network+ Challenge</div>
+        <div class="progress-text" id="challenge-day">Day 6 of 30 — Network+ Challenge</div>
 
         <div style="background: #111; border-radius: 12px; padding: 16px; margin-top: 16px;">
             <div style="font-weight: 600; font-size: 16px; margin-bottom: 8px;">🎯 Ports & Protocols</div>
@@ -1459,13 +1459,13 @@
         </div>
         
         <div class="progress-bar">
-            <div class="progress-fill blue" style="width: 20%"></div>
+            <div class="progress-fill blue" id="network-progress" style="width: 20%"></div>
         </div>
-        <div class="progress-text">Week 1, Day 6 — 20% of course</div>
+        <div class="progress-text" id="network-day">Week 1, Day 6 — 20% of course</div>
         
         <div class="stat-row">
             <span class="stat-label">Current Topic</span>
-            <span class="stat-value">Ports & Protocols</span>
+            <span class="stat-value" id="network-topic">Ports & Protocols</span>
         </div>
         <div class="stat-row">
             <span class="stat-label">Primary Resource</span>
@@ -2213,7 +2213,9 @@
             
             // Simple context-aware responses
             if (lower.includes('study') || lower.includes('network') || lower.includes('ports')) {
-                return "You're on Day 6 of Network+. Today's focus: Ports & Protocols. Key ports to memorize: 22 (SSH), 53 (DNS), 80 (HTTP), 443 (HTTPS). Want me to quiz you?";
+                const day = window.currentChallengeDay || 6;
+                const topic = getStudyTopicForDay(day);
+                return `You're on Day ${day} of Network+. Today's focus: ${topic.focus}. Key ports to memorize: 22 (SSH), 53 (DNS), 80 (HTTP), 443 (HTTPS). Want me to quiz you?`;
             }
             if (lower.includes('gym') || lower.includes('workout')) {
                 return "Push day today: Bench, Overhead Press, Incline Dumbbell. Last bench was 135lbs × 8. Try to hit 9 reps today?";
@@ -2229,7 +2231,9 @@
                 return `Current streaks: Network+ (${streaks.network?.current || 0}), French (${streaks.french?.current || 0}), Gym (${streaks.gym?.current || 0}). Keep it going!`;
             }
             if (lower.includes('progress') || lower.includes('how am i doing')) {
-                return "You're 20% through Network+ (Day 6 of 30). Sec+ starts March 18. Real estate app development begins around Day 61. On track!";
+                const day = window.currentChallengeDay || 6;
+                const progress = Math.round((day / 90) * 100);
+                return `You're ${progress}% through the 90-day challenge (Day ${day} of 90). Sec+ starts around Day 31. Real estate app development begins around Day 61. On track!`;
             }
             if (lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) {
                 return "Hey. What's up?";
@@ -2549,8 +2553,121 @@
             }
         }
 
+        // ==================== CHALLENGE DAY CALCULATOR ====================
+        function updateChallengeDay() {
+            // Challenge start date: February 11, 2026
+            const startDate = new Date('2026-02-11');
+            const today = new Date();
+            
+            // Calculate days difference
+            const diffTime = today - startDate;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            
+            // Determine phase and progress
+            let phase, dayOfPhase, totalDays, progressPercent;
+            
+            if (diffDays <= 30) {
+                phase = 'Network+';
+                dayOfPhase = diffDays;
+                totalDays = 30;
+                progressPercent = (diffDays / 90) * 100;
+            } else if (diffDays <= 60) {
+                phase = 'Security+';
+                dayOfPhase = diffDays - 30;
+                totalDays = 30;
+                progressPercent = (diffDays / 90) * 100;
+            } else if (diffDays <= 90) {
+                phase = 'Real Estate App';
+                dayOfPhase = diffDays - 60;
+                totalDays = 30;
+                progressPercent = (diffDays / 90) * 100;
+            } else {
+                phase = 'Complete';
+                dayOfPhase = 30;
+                totalDays = 30;
+                progressPercent = 100;
+            }
+            
+            // Update display
+            const dayText = diffDays > 90 ? 'Complete' : `Day ${diffDays} of 90 — ${phase} Challenge`;
+            const progressText = diffDays > 90 ? '100% complete' : `${Math.round(progressPercent)}% complete`;
+            
+            const challengeDayEl = document.getElementById('challenge-day');
+            const challengeProgressEl = document.getElementById('challenge-progress');
+            
+            if (challengeDayEl) {
+                challengeDayEl.textContent = dayText;
+            }
+            if (challengeProgressEl) {
+                challengeProgressEl.style.width = `${Math.min(progressPercent, 100)}%`;
+            }
+            
+            // Save current day for other functions
+            window.currentChallengeDay = diffDays;
+            window.currentPhase = phase;
+            
+            return diffDays;
+        }
+
+        // ==================== DYNAMIC STUDY TOPIC ====================
+        function getStudyTopicForDay(day) {
+            const topics = [
+                { day: 1, name: 'Network Fundamentals', focus: 'OSI Model' },
+                { day: 2, name: 'Network Fundamentals', focus: 'TCP/IP Model' },
+                { day: 3, name: 'Network Fundamentals', focus: 'Network Topologies' },
+                { day: 4, name: 'Cabling & Media', focus: 'Ethernet Standards' },
+                { day: 5, name: 'Cabling & Media', focus: 'Fiber vs Copper' },
+                { day: 6, name: 'Ports & Protocols', focus: 'TCP vs UDP' },
+                { day: 7, name: 'Ports & Protocols', focus: 'Common Ports' },
+                { day: 8, name: 'IP Addressing', focus: 'IPv4 Subnetting' },
+                { day: 9, name: 'IP Addressing', focus: 'IPv6 Basics' },
+                { day: 10, name: 'Routing', focus: 'Static vs Dynamic' }
+                // Add more topics as needed
+            ];
+            
+            const topic = topics.find(t => t.day === day) || topics[topics.length - 1];
+            return topic;
+        }
+
+        function updateStudyTopic() {
+            const day = window.currentChallengeDay || 6;
+            const topic = getStudyTopicForDay(day);
+            
+            // Update the "Today's Focus" section
+            const focusTitle = document.querySelector('.card:nth-of-type(4) div[style*="font-weight: 600"]');
+            const focusDesc = document.querySelector('.card:nth-of-type(4) div[style*="font-size: 13px"]');
+            
+            if (focusTitle) {
+                focusTitle.innerHTML = `🎯 ${topic.focus}`;
+            }
+            if (focusDesc) {
+                focusDesc.textContent = `${topic.name} — Day ${day}`;
+            }
+            
+            // Update Network+ Progress card
+            const networkDayEl = document.getElementById('network-day');
+            const networkTopicEl = document.getElementById('network-topic');
+            const networkProgressEl = document.getElementById('network-progress');
+            
+            if (networkDayEl) {
+                const week = Math.ceil(day / 7);
+                const dayOfWeek = ((day - 1) % 7) + 1;
+                const courseProgress = Math.round((day / 30) * 100);
+                networkDayEl.textContent = `Week ${week}, Day ${day} — ${courseProgress}% of course`;
+            }
+            if (networkTopicEl) {
+                networkTopicEl.textContent = topic.focus;
+            }
+            if (networkProgressEl) {
+                const courseProgress = Math.min((day / 30) * 100, 100);
+                networkProgressEl.style.width = `${courseProgress}%`;
+            }
+        }
+
         // Initialize everything
         updateDate();
+        updateChallengeDay(); // Calculate and display correct day
+        updateStudyTopic();   // Update study topic based on day
         initTasks();
         loadJournalEntries();
         checkNotificationPermission();
