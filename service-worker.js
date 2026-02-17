@@ -1,5 +1,5 @@
 // Service Worker for Dashboard - Offline-First with Background Sync
-const CACHE_NAME = 'dashboard-v3';
+const CACHE_NAME = 'dashboard-v4';
 const STATIC_ASSETS = [
   './',
   './index.html',
@@ -34,22 +34,50 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch: Cache-first strategy
+// Fetch: Network-first for HTML, cache-first for assets
 self.addEventListener('fetch', (event) => {
-  // Skip non-GET requests and browser extensions
-  if (event.request.method !== 'GET' || 
-      !event.request.url.startsWith('http')) {
+  const { request } = event;
+  const url = new URL(request.url);
+  
+  // Skip non-GET requests
+  if (request.method !== 'GET') return;
+  
+  // Skip non-HTTP requests
+  if (!url.protocol.startsWith('http')) return;
+  
+  // HTML pages - Network first, fallback to cache
+  if (request.mode === 'navigate' || request.destination === 'document') {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          // Update cache with fresh version
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(request, clone);
+          });
+          return response;
+        })
+        .catch(() => {
+          // Fallback to cache
+          return caches.match(request).then((cached) => {
+            if (cached) return cached;
+            // Last resort - return index.html for SPA routing
+            return caches.match('./index.html');
+          });
+        })
+    );
     return;
   }
   
+  // Static assets - Cache first, network fallback
   event.respondWith(
-    caches.match(event.request).then((cached) => {
+    caches.match(request).then((cached) => {
       if (cached) {
-        // Return cached version but also fetch in background to update
-        fetch(event.request).then((response) => {
+        // Return cached but update in background
+        fetch(request).then((response) => {
           if (response.ok) {
             caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, response);
+              cache.put(request, response);
             });
           }
         }).catch(() => {});
@@ -57,17 +85,17 @@ self.addEventListener('fetch', (event) => {
       }
       
       // Not in cache, fetch from network
-      return fetch(event.request).then((response) => {
+      return fetch(request).then((response) => {
         if (response.ok && response.type === 'basic') {
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, clone);
+            cache.put(request, clone);
           });
         }
         return response;
       }).catch(() => {
-        // Network failed - return offline page if it's navigation
-        if (event.request.mode === 'navigate') {
+        // Network failed
+        if (request.destination === 'document') {
           return caches.match('./index.html');
         }
       });
@@ -76,8 +104,6 @@ self.addEventListener('fetch', (event) => {
 });
 
 // Background Sync: Queue offline actions
-const SYNC_QUEUE_KEY = 'sync-queue';
-
 self.addEventListener('sync', (event) => {
   if (event.tag === 'sync-data') {
     event.waitUntil(processSyncQueue());
@@ -118,8 +144,6 @@ async function processSyncQueue() {
 }
 
 async function getSyncQueue() {
-  // This runs in SW context - can't access localStorage directly
-  // Data is passed from main thread via postMessage
   return self.syncQueue || [];
 }
 
@@ -132,10 +156,8 @@ self.addEventListener('message', (event) => {
   if (event.data.type === 'QUEUE_SYNC') {
     self.syncQueue = event.data.queue || [];
     
-    // Try to sync immediately if online
     if (navigator.onLine) {
       self.registration.sync.register('sync-data').catch(() => {
-        // Background sync not supported, process directly
         processSyncQueue();
       });
     }
@@ -153,7 +175,6 @@ function scheduleNotification(notification) {
   const { id, title, body, timestamp, tag } = notification;
   const delay = timestamp - Date.now();
   
-  // Clear existing timer for this ID
   if (notificationTimers[id]) {
     clearTimeout(notificationTimers[id]);
   }
@@ -172,7 +193,6 @@ function scheduleNotification(notification) {
         ]
       });
       
-      // Notify clients
       self.clients.matchAll().then((clients) => {
         clients.forEach((client) => {
           client.postMessage({ type: 'NOTIFICATION_SHOWN', id });
@@ -199,7 +219,7 @@ self.addEventListener('notificationclick', (event) => {
   }
 });
 
-// Periodic sync for background updates (if supported)
+// Periodic sync for background updates
 self.addEventListener('periodicsync', (event) => {
   if (event.tag === 'daily-check') {
     event.waitUntil(sendDailyReminder());
