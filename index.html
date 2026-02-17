@@ -1340,86 +1340,147 @@
             <h2>Today's Schedule</h2>
         </div>
 
-        <!-- Morning Routine -->
-        <div class="schedule-block" style="margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #2a2a2a;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                <div style="font-weight: 600; font-size: 15px;">🌅 6:00 AM — Morning Routine</div>
-                <div class="mini-progress" id="morning-progress" style="font-size: 12px; color: #888;">0/4 done</div>
-            </div>
-            <div class="mini-tasks" style="display: flex; flex-direction: column; gap: 8px;">
-                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
-                    <input type="checkbox" class="mini-checkbox" data-task="clean-room" onchange="toggleMiniTask(this)" style="width: 18px; height: 18px; accent-color: #22c55e;">
-                    <span style="font-size: 14px;">Clean room</span>
-                </label>
-                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
-                    <input type="checkbox" class="mini-checkbox" data-task="make-bed" onchange="toggleMiniTask(this)" style="width: 18px; height: 18px; accent-color: #22c55e;">
-                    <span style="font-size: 14px;">Make bed</span>
-                </label>
-                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
-                    <input type="checkbox" class="mini-checkbox" data-task="breakfast" onchange="toggleMiniTask(this)" style="width: 18px; height: 18px; accent-color: #22c55e;">
-                    <span style="font-size: 14px;">Breakfast</span>
-                </label>
-                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
-                    <input type="checkbox" class="mini-checkbox" data-task="gym" onchange="toggleMiniTask(this); toggleStreakLog('gym')" style="width: 18px; height: 18px; accent-color: #22c55e;">
-                    <span style="font-size: 14px;">Gym workout</span>
-                </label>
-            </div>
-        </div>
+        <ul class="task-list">
+            <li class="task-item" data-task="morning">
+                <div class="task-row" onclick="toggleTask('morning')">
+                    <div class="checkbox" id="cb-morning" onclick="toggleMainTask('morning', event)"></div>
+                    <div class="task-text" id="txt-morning">
+                        <div class="task-title">6:00 AM — Morning Routine</div>
+                        <div class="task-meta" id="morning-progress">0/4 done</div>
+                        <div class="expand-hint">👆 Tap to expand</div>
+                    </div>
+                </div>
+                <div class="task-details" id="details-morning">
+                    <div class="task-details-content">
+                        <div class="sub-tasks" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+                            <label class="sub-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" class="sub-checkbox" data-parent="morning" data-task="clean-room" onchange="toggleSubTask(this)" style="width: 20px; height: 20px; accent-color: #22c55e;">
+                                <span>Clean room</span>
+                            </label>
+                            <label class="sub-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" class="sub-checkbox" data-parent="morning" data-task="make-bed" onchange="toggleSubTask(this)" style="width: 20px; height: 20px; accent-color: #22c55e;">
+                                <span>Make bed</span>
+                            </label>
+                            <label class="sub-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" class="sub-checkbox" data-parent="morning" data-task="breakfast" onchange="toggleSubTask(this)" style="width: 20px; height: 20px; accent-color: #22c55e;">
+                                <span>Breakfast</span>
+                            </label>
+                            <label class="sub-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" class="sub-checkbox" data-parent="morning" data-task="gym" onchange="toggleSubTask(this); logStreak('gym')" style="width: 20px; height: 20px; accent-color: #22c55e;">
+                                <span>Gym workout</span>
+                            </label>
+                        </div>
 
-        <!-- Study Block -->
-        <div class="schedule-block" style="margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #2a2a2a;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                <div style="font-weight: 600; font-size: 15px;">📚 9:00 AM — Network+ Study</div>
-                <div class="mini-progress" id="study-progress" style="font-size: 12px; color: #888;">0/3 done</div>
-            </div>
-            <div style="font-size: 13px; color: #888; margin-bottom: 12px;">Ports & Protocols — Day 6</div>
-            <div class="mini-tasks" style="display: flex; flex-direction: column; gap: 8px;">
-                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
-                    <input type="checkbox" class="mini-checkbox" data-task="watch-video" onchange="toggleMiniTask(this)" style="width: 18px; height: 18px; accent-color: #22c55e;">
-                    <span style="font-size: 14px;">Watch Professor Messer video</span>
-                </label>
-                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
-                    <input type="checkbox" class="mini-checkbox" data-task="flashcards" onchange="toggleMiniTask(this)" style="width: 18px; height: 18px; accent-color: #22c55e;">
-                    <span style="font-size: 14px;">Flashcards — 15 common ports</span>
-                </label>
-                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
-                    <input type="checkbox" class="mini-checkbox" data-task="network-study-done" onchange="toggleMiniTask(this); toggleStreakLog('network')" style="width: 18px; height: 18px; accent-color: #22c55e;">
-                    <span style="font-size: 14px;">Study session complete</span>
-                </label>
-            </div>
-        </div>
+                        <h4>🏋️ Gym Workout — Push Day</h4>
+                        <ul>
+                            <li>Warm-up: 5 min light cardio</li>
+                            <li>Bench Press: 4 sets × 8-10 reps</li>
+                            <li>Overhead Press: 3 sets × 10 reps</li>
+                            <li>Incline Dumbbell Press: 3 sets × 12 reps</li>
+                            <li>Lateral Raises: 3 sets × 15 reps</li>
+                            <li>Tricep Pushdowns: 3 sets × 12 reps</li>
+                        </ul>
 
-        <!-- French Study -->
-        <div class="schedule-block" style="margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #2a2a2a;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                <div style="font-weight: 600; font-size: 15px;">🇫🇷 1:00 PM — French Study</div>
-                <div class="mini-progress" id="french-progress" style="font-size: 12px; color: #888;">0/2 done</div>
-            </div>
-            <div class="mini-tasks" style="display: flex; flex-direction: column; gap: 8px;">
-                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
-                    <input type="checkbox" class="mini-checkbox" data-task="duolingo" onchange="toggleMiniTask(this)" style="width: 18px; height: 18px; accent-color: #22c55e;">
-                    <span style="font-size: 14px;">Duolingo lesson</span>
-                </label>
-                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
-                    <input type="checkbox" class="mini-checkbox" data-task="french-study-done" onchange="toggleMiniTask(this); toggleStreakLog('french')" style="width: 18px; height: 18px; accent-color: #22c55e;">
-                    <span style="font-size: 14px;">Study session complete</span>
-                </label>
-            </div>
-        </div>
+                        <h4>📝 Edit Workout</h4>
+                        <textarea class="editable-area" id="notes-morning" placeholder="Modify workout, log weights, add notes..." oninput="saveNotes('morning')">Push day - focus on chest and shoulders. Aim for progressive overload. Last bench: 135lbs × 8 reps.</textarea>
+                    </div>
+                </div>
+            </li>
 
-        <!-- Work (if work day) -->
-        <div class="schedule-block" id="work-block" style="display: none;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                <div style="font-weight: 600; font-size: 15px;">💼 4:00 PM — Work</div>
-                <div class="mini-progress" id="work-progress" style="font-size: 12px; color: #888;">0/1 done</div>
-            </div>
-            <div class="mini-tasks" style="display: flex; flex-direction: column; gap: 8px;">
-                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
-                    <input type="checkbox" class="mini-checkbox" data-task="work-shift" onchange="toggleMiniTask(this)" style="width: 18px; height: 18px; accent-color: #22c55e;">
-                    <span style="font-size: 14px;">Work shift complete</span>
-                </label>
-            </div>
-        </div>
+            <li class="task-item" data-task="study">
+                <div class="task-row" onclick="toggleTask('study')">
+                    <div class="checkbox" id="cb-study" onclick="toggleMainTask('study', event)"></div>
+                    <div class="task-text" id="txt-study">
+                        <div class="task-title">9:00 AM — Network+ Study</div>
+                        <div class="task-meta" id="study-progress">0/3 done • Ports & Protocols</div>
+                        <div class="expand-hint">👆 Tap to expand</div>
+                    </div>
+                </div>
+                <div class="task-details" id="details-study">
+                    <div class="task-details-content">
+                        <div class="sub-tasks" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+                            <label class="sub-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" class="sub-checkbox" data-parent="study" data-task="watch-video" onchange="toggleSubTask(this)" style="width: 20px; height: 20px; accent-color: #22c55e;">
+                                <span>Watch Professor Messer video</span>
+                            </label>
+                            <label class="sub-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" class="sub-checkbox" data-parent="study" data-task="flashcards" onchange="toggleSubTask(this)" style="width: 20px; height: 20px; accent-color: #22c55e;">
+                                <span>Flashcards — 15 common ports</span>
+                            </label>
+                            <label class="sub-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" class="sub-checkbox" data-parent="study" data-task="study-complete" onchange="toggleSubTask(this); logStreak('network')" style="width: 20px; height: 20px; accent-color: #22c55e;">
+                                <span>Study session complete</span>
+                            </label>
+                        </div>
+
+                        <h4>🎯 Key Ports to Memorize</h4>
+                        <ul>
+                            <li>20/21 — FTP</li>
+                            <li>22 — SSH</li>
+                            <li>25 — SMTP</li>
+                            <li>53 — DNS</li>
+                            <li>80 — HTTP</li>
+                            <li>443 — HTTPS</li>
+                            <li>3389 — RDP</li>
+                        </ul>
+
+                        <h4>✍️ Study Notes</h4>
+                        <textarea class="editable-area" id="notes-study" placeholder="Log what you learned..." oninput="saveNotes('study')"></textarea>
+                    </div>
+                </div>
+            </li>
+
+            <li class="task-item" data-task="french">
+                <div class="task-row" onclick="toggleTask('french')">
+                    <div class="checkbox" id="cb-french" onclick="toggleMainTask('french', event)"></div>
+                    <div class="task-text" id="txt-french">
+                        <div class="task-title">1:00 PM — French Study</div>
+                        <div class="task-meta" id="french-progress">0/2 done</div>
+                        <div class="expand-hint">👆 Tap to expand</div>
+                    </div>
+                </div>
+                <div class="task-details" id="details-french">
+                    <div class="task-details-content">
+                        <div class="sub-tasks" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+                            <label class="sub-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" class="sub-checkbox" data-parent="french" data-task="duolingo" onchange="toggleSubTask(this)" style="width: 20px; height: 20px; accent-color: #22c55e;">
+                                <span>Duolingo lesson</span>
+                            </label>
+                            <label class="sub-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" class="sub-checkbox" data-parent="french" data-task="french-complete" onchange="toggleSubTask(this); logStreak('french')" style="width: 20px; height: 20px; accent-color: #22c55e;">
+                                <span>Study session complete</span>
+                            </label>
+                        </div>
+
+                        <h4>🇫🇷 Resources</h4>
+                        <ul>
+                            <li>Duolingo — Daily streak</li>
+                            <li>Busuu or Babbel — Structured lessons</li>
+                            <li>YouTube: Easy French</li>
+                        </ul>
+
+                        <h4>📝 Today's Focus</h4>
+                        <textarea class="editable-area" id="notes-french" placeholder="What did you study today?" oninput="saveNotes('french')"></textarea>
+                    </div>
+                </div>
+            </li>
+
+            <li class="task-item" data-task="work" id="work-item" style="display: none;">
+                <div class="task-row" onclick="toggleTask('work')">
+                    <div class="checkbox" id="cb-work" onclick="toggleMainTask('work', event)"></div>
+                    <div class="task-text" id="txt-work">
+                        <div class="task-title">4:00-10:00 PM — Work</div>
+                        <div class="task-meta">Mon/Wed/Fri shift</div>
+                    </div>
+                </div>
+                <div class="task-details" id="details-work">
+                    <div class="task-details-content">
+                        <h4>💼 Work Notes</h4>
+                        <textarea class="editable-area" id="notes-work" placeholder="Log work tasks, hours..." oninput="saveNotes('work')"></textarea>
+                    </div>
+                </div>
+            </li>
+        </ul>
     </div>
 
     <!-- Journal Section -->
@@ -2429,60 +2490,118 @@
             }
         }
 
-        // ==================== MINI TASK FUNCTIONS ====================
-        const miniTasksKey = 'miniTasks_' + new Date().toISOString().split('T')[0];
-        let miniTasks = JSON.parse(localStorage.getItem(miniTasksKey) || '{}');
+        // ==================== SUB TASK FUNCTIONS ====================
+        const subTasksKey = 'subTasks_' + new Date().toISOString().split('T')[0];
+        let subTasks = JSON.parse(localStorage.getItem(subTasksKey) || '{}');
+        const mainTasksKey = 'mainTasks_' + new Date().toISOString().split('T')[0];
+        let mainTasks = JSON.parse(localStorage.getItem(mainTasksKey) || '{}');
 
-        function toggleMiniTask(checkbox) {
+        function toggleMainTask(taskId, event) {
+            event.stopPropagation();
+            const checkbox = document.getElementById('cb-' + taskId);
+            const isDone = checkbox.classList.contains('done');
+            const text = document.getElementById('txt-' + taskId);
+
+            if (isDone) {
+                checkbox.classList.remove('done');
+                text.classList.remove('done');
+                mainTasks[taskId] = false;
+            } else {
+                checkbox.classList.add('done');
+                text.classList.add('done');
+                mainTasks[taskId] = true;
+                // Check all sub-tasks
+                document.querySelectorAll(`.sub-checkbox[data-parent="${taskId}"]`).forEach(sub => {
+                    sub.checked = true;
+                    subTasks[sub.dataset.task] = true;
+                });
+                showToast('All done!', taskId + ' routine completed', '✅');
+            }
+
+            localStorage.setItem(mainTasksKey, JSON.stringify(mainTasks));
+            localStorage.setItem(subTasksKey, JSON.stringify(subTasks));
+            updateSubTaskProgress(taskId);
+            updateWeeklyReview();
+        }
+
+        function toggleSubTask(checkbox) {
             const taskId = checkbox.dataset.task;
-            miniTasks[taskId] = checkbox.checked;
-            localStorage.setItem(miniTasksKey, JSON.stringify(miniTasks));
-            updateMiniProgress();
+            const parentId = checkbox.dataset.parent;
+            subTasks[taskId] = checkbox.checked;
+            localStorage.setItem(subTasksKey, JSON.stringify(subTasks));
+
+            // Update parent progress
+            updateSubTaskProgress(parentId);
+
+            // Check if all sub-tasks are done
+            const allSubs = document.querySelectorAll(`.sub-checkbox[data-parent="${parentId}"]`);
+            const allChecked = Array.from(allSubs).every(sub => sub.checked);
+
+            if (allChecked) {
+                const mainCheckbox = document.getElementById('cb-' + parentId);
+                const mainText = document.getElementById('txt-' + parentId);
+                mainCheckbox.classList.add('done');
+                mainText.classList.add('done');
+                mainTasks[parentId] = true;
+                localStorage.setItem(mainTasksKey, JSON.stringify(mainTasks));
+            } else {
+                const mainCheckbox = document.getElementById('cb-' + parentId);
+                const mainText = document.getElementById('txt-' + parentId);
+                mainCheckbox.classList.remove('done');
+                mainText.classList.remove('done');
+                mainTasks[parentId] = false;
+                localStorage.setItem(mainTasksKey, JSON.stringify(mainTasks));
+            }
 
             if (checkbox.checked) {
                 showToast('Task Done!', taskId.replace(/-/g, ' ') + ' completed', '✅');
             }
         }
 
-        function updateMiniProgress() {
-            const blocks = ['morning', 'study', 'french', 'work'];
-            blocks.forEach(block => {
-                const checkboxes = document.querySelectorAll(`[data-task*="${block === 'morning' ? '' : block}"]`);
-                let checked = 0;
-                let total = 0;
-                checkboxes.forEach(cb => {
-                    if (cb.dataset.task.includes(block) || (block === 'morning' && ['clean-room', 'make-bed', 'breakfast', 'gym'].includes(cb.dataset.task))) {
-                        total++;
-                        if (cb.checked) checked++;
-                    }
-                });
-                const progressEl = document.getElementById(block + '-progress');
-                if (progressEl) {
-                    progressEl.textContent = `${checked}/${total} done`;
-                    if (checked === total) progressEl.style.color = '#22c55e';
+        function updateSubTaskProgress(parentId) {
+            const subs = document.querySelectorAll(`.sub-checkbox[data-parent="${parentId}"]`);
+            let checked = 0;
+            subs.forEach(sub => { if (sub.checked) checked++; });
+
+            const progressEl = document.getElementById(parentId + '-progress');
+            if (progressEl) {
+                const total = subs.length;
+                const parentName = parentId === 'morning' ? '' :
+                                   parentId === 'study' ? ' • Ports & Protocols' :
+                                   parentId === 'french' ? '' : '';
+                progressEl.textContent = `${checked}/${total} done${parentName}`;
+                if (checked === total) progressEl.style.color = '#22c55e';
+                else progressEl.style.color = '#888';
+            }
+        }
+
+        function loadSubTasks() {
+            // Load sub-tasks
+            document.querySelectorAll('.sub-checkbox').forEach(cb => {
+                const taskId = cb.dataset.task;
+                cb.checked = subTasks[taskId] || false;
+            });
+
+            // Load main tasks
+            document.querySelectorAll('[id^="cb-"]').forEach(cb => {
+                const taskId = cb.id.replace('cb-', '');
+                if (mainTasks[taskId]) {
+                    cb.classList.add('done');
+                    const text = document.getElementById('txt-' + taskId);
+                    if (text) text.classList.add('done');
                 }
             });
-        }
 
-        function loadMiniTasks() {
-            document.querySelectorAll('.mini-checkbox').forEach(cb => {
-                const taskId = cb.dataset.task;
-                cb.checked = miniTasks[taskId] || false;
-            });
-            updateMiniProgress();
-        }
-
-        function toggleStreakLog(type) {
-            // This is called when study/gym/french checkboxes are checked
-            logStreak(type);
+            // Update all progress
+            ['morning', 'study', 'french', 'work'].forEach(updateSubTaskProgress);
         }
 
         function checkWorkDay() {
-            const day = new Date().getDay(); // 0=Sun, 1=Mon, 3=Wed, 5=Fri
+            const day = new Date().getDay();
             const isWorkDay = [1, 3, 5].includes(day);
-            const workBlock = document.getElementById('work-block');
-            if (workBlock && isWorkDay) {
-                workBlock.style.display = 'block';
+            const workItem = document.getElementById('work-item');
+            if (workItem && isWorkDay) {
+                workItem.style.display = 'block';
             }
         }
 
@@ -2496,7 +2615,7 @@
         loadStreaks();
         loadSRItems();
         updateWeeklyReview();
-        loadMiniTasks();
+        loadSubTasks();
         checkWorkDay();
 
         // Check backend connectivity
