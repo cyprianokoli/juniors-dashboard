@@ -436,6 +436,35 @@
         </div>
     </div>
 
+    <!-- Backend Connection -->
+    <div class="card">
+        <div class="card-header">
+            <span class="icon">☁️</span>
+            <h2>Backend Connection</h2>
+        </div>
+        
+        <div class="setting-row">
+            <div class="setting-info">
+                <div class="setting-label">Cloud Backend</div>
+                <div class="setting-desc" id="backend-desc">Checking connection...</div>
+            </div>
+            <div class="toggle" id="backend-status-indicator">
+                <div class="toggle-knob"></div>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <h4>Connection Details</h4>
+            <p>URL: <span id="backend-url" class="stat-value">juniors-dashboard.pages.dev</span></p>
+            <p>Status: <span id="backend-status-text">Checking...</span></p>
+            <p>Last seen: <span id="backend-last-seen">Never</span></p>
+        </div>
+        
+        <button class="btn btn-secondary" onclick="checkBackendConnection()">
+            <span>🔄</span> Test Connection
+        </button>
+    </div>
+
     <!-- Display Settings -->
     <div class="card">
         <div class="card-header">
@@ -677,7 +706,54 @@
                 loadSettings();
             }
         }
-        
+
+        // Backend connection check
+        const API_BASE_URL = 'https://juniors-dashboard.pages.dev/api';
+
+        async function checkBackendConnection() {
+            const statusText = document.getElementById('backend-status-text');
+            const lastSeen = document.getElementById('backend-last-seen');
+            const indicator = document.getElementById('backend-status-indicator');
+            const desc = document.getElementById('backend-desc');
+
+            statusText.textContent = 'Testing...';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    statusText.textContent = '✅ Connected';
+                    statusText.style.color = '#22c55e';
+                    indicator.classList.add('on');
+                    desc.textContent = 'Backend is online and syncing';
+                    localStorage.setItem('backendLastSeen', Date.now().toString());
+                    lastSeen.textContent = new Date().toLocaleString();
+                    showToast('Backend Connected', 'Sync is active', '☁️');
+                } else {
+                    throw new Error('Backend error');
+                }
+            } catch (error) {
+                statusText.textContent = '❌ Offline';
+                statusText.style.color = '#ef4444';
+                indicator.classList.remove('on');
+                desc.textContent = 'Using local storage only';
+                const lastSeenTime = localStorage.getItem('backendLastSeen');
+                if (lastSeenTime) {
+                    lastSeen.textContent = new Date(parseInt(lastSeenTime)).toLocaleString();
+                } else {
+                    lastSeen.textContent = 'Never';
+                }
+            }
+        }
+
+        // Check backend on page load
+        checkBackendConnection();
+
         // Initialize
         loadSettings();
     </script>

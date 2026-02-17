@@ -1238,60 +1238,44 @@
     <div class="card">
         <div class="card-header">
             <span class="icon">💪</span>
-            <h2>90-Day Hard Challenge</h2>
+            <h2>Today's Focus</h2>
         </div>
-        
+
         <div class="progress-bar">
             <div class="progress-fill green" style="width: 20%"></div>
         </div>
-        <div class="progress-text">Day 6 of 30 (Network+) — 20% complete</div>
-        
-        <ul class="task-list">
-            <li class="task-item" data-task="network-plus">
-                <div class="task-row" onclick="toggleTask('network-plus')">
-                    <div class="checkbox" id="cb-network-plus"></div>
-                    <div class="task-text" id="txt-network-plus">
-                        <div class="task-title">Days 1-30: Network+ Cert</div>
-                        <div class="task-meta">In Progress • Day 6: Ports & Protocols</div>
-                        <div class="expand-hint">👆 Tap for study details</div>
-                    </div>
+        <div class="progress-text">Day 6 of 30 — Network+ Challenge</div>
+
+        <div style="background: #111; border-radius: 12px; padding: 16px; margin-top: 16px;">
+            <div style="font-weight: 600; font-size: 16px; margin-bottom: 8px;">🎯 Ports & Protocols</div>
+            <div style="font-size: 13px; color: #888; margin-bottom: 12px;">Today's study topic</div>
+
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px;">
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                    <span style="color: #22c55e;">✓</span> TCP vs UDP differences
                 </div>
-                <div class="task-details" id="details-network-plus">
-                    <div class="task-details-content">
-                        <h4>🎯 Today's Focus: Ports & Protocols</h4>
-                        <ul>
-                            <li>TCP vs UDP — connection-oriented vs connectionless</li>
-                            <li>Three-way handshake (SYN, SYN-ACK, ACK)</li>
-                            <li>Well-known ports: 20/21 (FTP), 22 (SSH), 25 (SMTP), 53 (DNS), 80 (HTTP), 443 (HTTPS), 3389 (RDP)</li>
-                            <li>Ephemeral ports (49152-65535)</li>
-                        </ul>
-                        
-                        <h4>📚 Resources</h4>
-                        <ul>
-                            <li>Professor Messer Network+ — Ports & Protocols section</li>
-                            <li>Flashcard deck: Common ports</li>
-                        </ul>
-                        
-                        <h4>✍️ Notes</h4>
-                        <textarea class="editable-area" id="notes-network-plus" placeholder="Add your notes here..." oninput="saveNotes('network-plus')">TCP = reliable, ordered, slower. UDP = fast, unreliable, no handshake. Remember: HTTP 80, HTTPS 443, SSH 22 (secure shell), FTP 21, DNS 53.</textarea>
-                    </div>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                    <span style="color: #22c55e;">✓</span> Three-way handshake
                 </div>
-            </li>
-            
-            <li class="task-item" data-task="security-plus">
-                <div class="task-row" onclick="toggleTask('security-plus')">
-                    <div class="checkbox" id="cb-security-plus"></div>
-                    <div class="task-text" id="txt-security-plus">
-                        <div class="task-title">Days 31-60: Security+ Cert</div>
-                        <div class="task-meta">Upcoming • Mar 18 start</div>
-                        <div class="expand-hint">👆 Tap to preview plan</div>
-                    </div>
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 14px;">
+                    <span>○</span> Common ports (22, 53, 80, 443)
                 </div>
-                <div class="task-details" id="details-security-plus">
-                    <div class="task-details-content">
-                        <h4>🎯 Security+ Preview (SY0-701)</h4>
-                        <ul>
-                            <li>General Security Concepts</li>
+            </div>
+
+            <div style="font-size: 12px; color: #666; padding-top: 12px; border-top: 1px solid #2a2a2a;">
+                📚 Professor Messer Network+ — Ports & Protocols section
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 16px;">
+            <button class="btn btn-primary" style="flex: 1;" onclick="showToast('Opening flashcards...', 'Loading port numbers', '📚')">
+                🎴 Flashcards
+            </button>
+            <button class="btn btn-secondary" style="flex: 1;" onclick="showToast('Opening notes...', 'Ready to study', '✍️')">
+                ✍️ Notes
+            </button>
+        </div>
+    </div>
                             <li>Threats, Vulnerabilities, Mitigations</li>
                             <li>Security Architecture</li>
                             <li>Security Operations</li>
@@ -1355,122 +1339,87 @@
             <span class="icon">📅</span>
             <h2>Today's Schedule</h2>
         </div>
-        
-        <ul class="task-list">
-            <li class="task-item" data-task="morning">
-                <div class="task-row" onclick="toggleTask('morning')">
-                    <div class="checkbox" id="cb-morning"></div>
-                    <div class="task-text" id="txt-morning">
-                        <div class="task-title">6:00 AM — Wake Up & Morning Routine</div>
-                        <div class="task-meta">Clean room, make bed, breakfast, gym</div>
-                        <div class="expand-hint">👆 Tap for gym workout</div>
-                    </div>
-                </div>
-                <div class="task-details" id="details-morning">
-                    <div class="task-details-content">
-                        <h4>🏋️ Gym Workout — Push Day</h4>
-                        <ul>
-                            <li>Warm-up: 5 min light cardio</li>
-                            <li>Bench Press: 4 sets × 8-10 reps</li>
-                            <li>Overhead Press: 3 sets × 10 reps</li>
-                            <li>Incline Dumbbell Press: 3 sets × 12 reps</li>
-                            <li>Lateral Raises: 3 sets × 15 reps</li>
-                            <li>Tricep Pushdowns: 3 sets × 12 reps</li>
-                            <li>Cool down: stretch chest & shoulders</li>
-                        </ul>
-                        
-                        <h4>📝 Edit Workout</h4>
-                        <textarea class="editable-area" id="notes-morning" placeholder="Modify workout, log weights, add notes..." oninput="saveNotes('morning')">Push day - focus on chest and shoulders. Aim for progressive overload. Last bench: 135lbs × 8 reps.</textarea>
-                    </div>
-                </div>
-            </li>
-            
-            <li class="task-item" data-task="study">
-                <div class="task-row" onclick="toggleTask('study')">
-                    <div class="checkbox" id="cb-study"></div>
-                    <div class="task-text" id="txt-study">
-                        <div class="task-title">9:00 AM — Network+ Study Block</div>
-                        <div class="task-meta">Ports & Protocols (TCP/UDP, common ports)</div>
-                        <div class="expand-hint">👆 Tap for study plan</div>
-                    </div>
-                </div>
-                <div class="task-details" id="details-study">
-                    <div class="task-details-content">
-                        <h4>📚 Study Plan — 2 Hours</h4>
-                        <ul>
-                            <li>Watch: Professor Messer — Ports & Protocols (30 min)</li>
-                            <li>Take notes on TCP vs UDP differences</li>
-                            <li>Flashcards: Memorize 15 common ports</li>
-                            <li>Practice: SubnetCalculator.net exercises</li>
-                            <li>Quiz: 10 questions on yesterday's material (OSI Model)</li>
-                        </ul>
-                        
-                        <h4>🎯 Key Ports to Memorize</h4>
-                        <ul>
-                            <li>20/21 — FTP (File Transfer)</li>
-                            <li>22 — SSH (Secure Shell)</li>
-                            <li>25 — SMTP (Email)</li>
-                            <li>53 — DNS</li>
-                            <li>80 — HTTP</li>
-                            <li>110 — POP3</li>
-                            <li>143 — IMAP</li>
-                            <li>443 — HTTPS</li>
-                            <li>3389 — RDP (Remote Desktop)</li>
-                        </ul>
-                        
-                        <h4>✍️ Study Notes</h4>
-                        <textarea class="editable-area" id="notes-study" placeholder="Log what you learned, questions to review..." oninput="saveNotes('study')"></textarea>
-                    </div>
-                </div>
-            </li>
-            
-            <li class="task-item" data-task="french">
-                <div class="task-row" onclick="toggleTask('french')">
-                    <div class="checkbox" id="cb-french"></div>
-                    <div class="task-text" id="txt-french">
-                        <div class="task-title">1:00 PM — French Study</div>
-                        <div class="task-meta">1-2 hour session</div>
-                        <div class="expand-hint">👆 Tap for resources</div>
-                    </div>
-                </div>
-                <div class="task-details" id="details-french">
-                    <div class="task-details-content">
-                        <h4>🇫🇷 French Study Resources</h4>
-                        <ul>
-                            <li>Duolingo — Daily streak (maintain!)</li>
-                            <li>Busuu or Babbel — Structured lessons</li>
-                            <li>YouTube: Easy French or Français avec Pierre</li>
-                            <li>Anki deck: French vocabulary</li>
-                        </ul>
-                        
-                        <h4>📝 Today's Focus</h4>
-                        <textarea class="editable-area" id="notes-french" placeholder="What did you study today? New words learned?" oninput="saveNotes('french')"></textarea>
-                    </div>
-                </div>
-            </li>
-            
-            <li class="task-item" data-task="work">
-                <div class="task-row" onclick="toggleTask('work')">
-                    <div class="checkbox" id="cb-work"></div>
-                    <div class="task-text" id="txt-work">
-                        <div class="task-title">4:00-10:00 PM — Work</div>
-                        <div class="task-meta">Monday shift • Mon/Wed/Fri schedule</div>
-                    </div>
-                </div>
-                <div class="task-details" id="details-work">
-                    <div class="task-details-content">
-                        <h4>💼 Work Schedule</h4>
-                        <ul>
-                            <li>Mon/Wed/Fri: 4:00 PM - 10:00 PM</li>
-                            <li>Tue/Thu/Sat/Sun: Study days</li>
-                        </ul>
-                        
-                        <h4>📝 Work Notes</h4>
-                        <textarea class="editable-area" id="notes-work" placeholder="Log work tasks, hours, notes..." oninput="saveNotes('work')"></textarea>
-                    </div>
-                </div>
-            </li>
-        </ul>
+
+        <!-- Morning Routine -->
+        <div class="schedule-block" style="margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #2a2a2a;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <div style="font-weight: 600; font-size: 15px;">🌅 6:00 AM — Morning Routine</div>
+                <div class="mini-progress" id="morning-progress" style="font-size: 12px; color: #888;">0/4 done</div>
+            </div>
+            <div class="mini-tasks" style="display: flex; flex-direction: column; gap: 8px;">
+                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
+                    <input type="checkbox" class="mini-checkbox" data-task="clean-room" onchange="toggleMiniTask(this)" style="width: 18px; height: 18px; accent-color: #22c55e;">
+                    <span style="font-size: 14px;">Clean room</span>
+                </label>
+                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
+                    <input type="checkbox" class="mini-checkbox" data-task="make-bed" onchange="toggleMiniTask(this)" style="width: 18px; height: 18px; accent-color: #22c55e;">
+                    <span style="font-size: 14px;">Make bed</span>
+                </label>
+                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
+                    <input type="checkbox" class="mini-checkbox" data-task="breakfast" onchange="toggleMiniTask(this)" style="width: 18px; height: 18px; accent-color: #22c55e;">
+                    <span style="font-size: 14px;">Breakfast</span>
+                </label>
+                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
+                    <input type="checkbox" class="mini-checkbox" data-task="gym" onchange="toggleMiniTask(this); toggleStreakLog('gym')" style="width: 18px; height: 18px; accent-color: #22c55e;">
+                    <span style="font-size: 14px;">Gym workout</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Study Block -->
+        <div class="schedule-block" style="margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #2a2a2a;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <div style="font-weight: 600; font-size: 15px;">📚 9:00 AM — Network+ Study</div>
+                <div class="mini-progress" id="study-progress" style="font-size: 12px; color: #888;">0/3 done</div>
+            </div>
+            <div style="font-size: 13px; color: #888; margin-bottom: 12px;">Ports & Protocols — Day 6</div>
+            <div class="mini-tasks" style="display: flex; flex-direction: column; gap: 8px;">
+                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
+                    <input type="checkbox" class="mini-checkbox" data-task="watch-video" onchange="toggleMiniTask(this)" style="width: 18px; height: 18px; accent-color: #22c55e;">
+                    <span style="font-size: 14px;">Watch Professor Messer video</span>
+                </label>
+                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
+                    <input type="checkbox" class="mini-checkbox" data-task="flashcards" onchange="toggleMiniTask(this)" style="width: 18px; height: 18px; accent-color: #22c55e;">
+                    <span style="font-size: 14px;">Flashcards — 15 common ports</span>
+                </label>
+                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
+                    <input type="checkbox" class="mini-checkbox" data-task="network-study-done" onchange="toggleMiniTask(this); toggleStreakLog('network')" style="width: 18px; height: 18px; accent-color: #22c55e;">
+                    <span style="font-size: 14px;">Study session complete</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- French Study -->
+        <div class="schedule-block" style="margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #2a2a2a;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <div style="font-weight: 600; font-size: 15px;">🇫🇷 1:00 PM — French Study</div>
+                <div class="mini-progress" id="french-progress" style="font-size: 12px; color: #888;">0/2 done</div>
+            </div>
+            <div class="mini-tasks" style="display: flex; flex-direction: column; gap: 8px;">
+                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
+                    <input type="checkbox" class="mini-checkbox" data-task="duolingo" onchange="toggleMiniTask(this)" style="width: 18px; height: 18px; accent-color: #22c55e;">
+                    <span style="font-size: 14px;">Duolingo lesson</span>
+                </label>
+                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
+                    <input type="checkbox" class="mini-checkbox" data-task="french-study-done" onchange="toggleMiniTask(this); toggleStreakLog('french')" style="width: 18px; height: 18px; accent-color: #22c55e;">
+                    <span style="font-size: 14px;">Study session complete</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Work (if work day) -->
+        <div class="schedule-block" id="work-block" style="display: none;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                <div style="font-weight: 600; font-size: 15px;">💼 4:00 PM — Work</div>
+                <div class="mini-progress" id="work-progress" style="font-size: 12px; color: #888;">0/1 done</div>
+            </div>
+            <div class="mini-tasks" style="display: flex; flex-direction: column; gap: 8px;">
+                <label class="mini-task" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 8px; background: #111; border-radius: 8px;">
+                    <input type="checkbox" class="mini-checkbox" data-task="work-shift" onchange="toggleMiniTask(this)" style="width: 18px; height: 18px; accent-color: #22c55e;">
+                    <span style="font-size: 14px;">Work shift complete</span>
+                </label>
+            </div>
+        </div>
     </div>
 
     <!-- Journal Section -->
@@ -2472,14 +2421,71 @@
         function askAI(prompt) {
             const message = "📱 Dashboard: " + prompt;
             console.log(message);
-            
+
             window.location.href = "tg://resolve?domain=tragetop";
-            
+
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(prompt);
             }
         }
-        
+
+        // ==================== MINI TASK FUNCTIONS ====================
+        const miniTasksKey = 'miniTasks_' + new Date().toISOString().split('T')[0];
+        let miniTasks = JSON.parse(localStorage.getItem(miniTasksKey) || '{}');
+
+        function toggleMiniTask(checkbox) {
+            const taskId = checkbox.dataset.task;
+            miniTasks[taskId] = checkbox.checked;
+            localStorage.setItem(miniTasksKey, JSON.stringify(miniTasks));
+            updateMiniProgress();
+
+            if (checkbox.checked) {
+                showToast('Task Done!', taskId.replace(/-/g, ' ') + ' completed', '✅');
+            }
+        }
+
+        function updateMiniProgress() {
+            const blocks = ['morning', 'study', 'french', 'work'];
+            blocks.forEach(block => {
+                const checkboxes = document.querySelectorAll(`[data-task*="${block === 'morning' ? '' : block}"]`);
+                let checked = 0;
+                let total = 0;
+                checkboxes.forEach(cb => {
+                    if (cb.dataset.task.includes(block) || (block === 'morning' && ['clean-room', 'make-bed', 'breakfast', 'gym'].includes(cb.dataset.task))) {
+                        total++;
+                        if (cb.checked) checked++;
+                    }
+                });
+                const progressEl = document.getElementById(block + '-progress');
+                if (progressEl) {
+                    progressEl.textContent = `${checked}/${total} done`;
+                    if (checked === total) progressEl.style.color = '#22c55e';
+                }
+            });
+        }
+
+        function loadMiniTasks() {
+            document.querySelectorAll('.mini-checkbox').forEach(cb => {
+                const taskId = cb.dataset.task;
+                cb.checked = miniTasks[taskId] || false;
+            });
+            updateMiniProgress();
+        }
+
+        function toggleStreakLog(type) {
+            // This is called when study/gym/french checkboxes are checked
+            logStreak(type);
+        }
+
+        function checkWorkDay() {
+            const day = new Date().getDay(); // 0=Sun, 1=Mon, 3=Wed, 5=Fri
+            const isWorkDay = [1, 3, 5].includes(day);
+            const workBlock = document.getElementById('work-block');
+            if (workBlock && isWorkDay) {
+                workBlock.style.display = 'block';
+            }
+        }
+
         // Initialize everything
         updateDate();
         initTasks();
@@ -2490,6 +2496,8 @@
         loadStreaks();
         loadSRItems();
         updateWeeklyReview();
+        loadMiniTasks();
+        checkWorkDay();
 
         // Check backend connectivity
         checkBackend().then(connected => {
