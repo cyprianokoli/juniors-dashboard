@@ -1627,6 +1627,64 @@
     </div>
 
     <script>
+        // ==================== API CONFIGURATION ====================
+        const API_BASE_URL = 'https://juniors-dashboard.pages.dev/api'; // Cloudflare Tunnel backend
+        let useBackend = false; // Will be set to true if backend is available
+
+        // Check backend connectivity
+        async function checkBackend() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`, { method: 'GET', mode: 'cors' });
+                if (response.ok) {
+                    useBackend = true;
+                    console.log('Backend connected');
+                    return true;
+                }
+            } catch (e) {
+                console.log('Backend offline, using localStorage');
+            }
+            useBackend = false;
+            return false;
+        }
+
+        // API wrapper functions
+        async function apiGet(endpoint) {
+            if (!useBackend) return null;
+            try {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, { mode: 'cors' });
+                return await response.json();
+            } catch (e) {
+                return null;
+            }
+        }
+
+        async function apiPost(endpoint, data) {
+            if (!useBackend) return null;
+            try {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors',
+                    body: JSON.stringify(data)
+                });
+                return await response.json();
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // Sync localStorage to backend
+        async function syncToBackend() {
+            if (!useBackend) return;
+            const data = {
+                tasks: JSON.parse(localStorage.getItem('completedTasks') || '{}'),
+                journal: JSON.parse(localStorage.getItem('journalEntries') || '[]'),
+                streaks: JSON.parse(localStorage.getItem('streakData') || '{}'),
+                studyTopics: JSON.parse(localStorage.getItem('studyTopics') || '[]')
+            };
+            await apiPost('/sync', data);
+        }
+
         // ==================== SERVICE WORKER REGISTRATION ====================
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('service-worker.js')
@@ -2159,15 +2217,22 @@
             showTypingIndicator();
             
             try {
-                // For now, just echo back with context-aware responses
-                // In the future, this would connect to the actual AI backend
-                await new Promise(r => setTimeout(r, 800));
-                
-                removeTypingIndicator();
-                
-                const response = generateAIResponse(message);
-                addChatMessage('assistant', response);
-                
+                // Try backend API first
+                if (useBackend) {
+                    const response = await apiPost('/ai', { message, context: 'dashboard' });
+                    removeTypingIndicator();
+                    if (response && response.text) {
+                        addChatMessage('assistant', response.text);
+                    } else {
+                        addChatMessage('assistant', generateAIResponse(message));
+                    }
+                } else {
+                    // Fallback to local response
+                    await new Promise(r => setTimeout(r, 800));
+                    removeTypingIndicator();
+                    const response = generateAIResponse(message);
+                    addChatMessage('assistant', response);
+                }
             } catch (error) {
                 removeTypingIndicator();
                 addChatMessage('assistant', 'Sorry, something went wrong. Try again?');
@@ -2425,6 +2490,14 @@
         loadStreaks();
         loadSRItems();
         updateWeeklyReview();
+
+        // Check backend connectivity
+        checkBackend().then(connected => {
+            if (connected) {
+                showToast('Backend Connected', 'Data will sync to cloud', '☁️');
+                syncToBackend();
+            }
+        });
 
         // Check for scheduled notifications every minute
         setInterval(() => {
